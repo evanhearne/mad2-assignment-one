@@ -12,6 +12,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -28,10 +29,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ie.setu.mad2_assignment_one.data.ShoppingItem
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ItemDetailsScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit) {
+fun ItemDetailsScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit, item: ShoppingItem) {
     Column { 
         Row {
             TopAppBar(
@@ -46,24 +48,48 @@ fun ItemDetailsScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit)
             )
         }
         Row (modifier= modifier.fillMaxHeight(), verticalAlignment = Alignment.CenterVertically) {
-            Card(modifier = modifier.fillMaxWidth().padding(15.dp)) {
+            Card(modifier = modifier
+                .fillMaxWidth()
+                .padding(15.dp)) {
                 Image(imageVector = Icons.Default.Star, contentDescription = "Item Image", Modifier
                     .size(110.dp)
                     .align(Alignment.CenterHorizontally)
-                    .padding(top=10.dp))
-                Text("Item Name", modifier = modifier.align(Alignment.CenterHorizontally), fontSize = 30.sp)
-                Text("€55.55", modifier = modifier.align(Alignment.CenterHorizontally), fontSize = 25.sp)
+                    .padding(top = 10.dp))
+                Text(item.name, modifier = modifier.align(Alignment.CenterHorizontally), fontSize = 30.sp)
+                Text("${item.price}", modifier = modifier.align(Alignment.CenterHorizontally), fontSize = 25.sp)
+                var color = Color(0xFFCCFFCC)
+                if (!item.availability)
+                    color = Color(0xFFFF6666)
                 Button(
                     onClick = {},
-                    modifier = modifier.align(Alignment.CenterHorizontally).padding(top=10.dp),
+                    modifier = modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(top = 10.dp),
                     enabled = false,
-                    colors = ButtonDefaults.buttonColors(disabledContainerColor = Color(0xFFCCFFCC))
+                    colors = ButtonDefaults.buttonColors(disabledContainerColor = color)
                 ) {
-                    Icon(imageVector = Icons.Default.Check, contentDescription = "Green Check Mark", tint = Color(0xFF006400))
-                    Text(" In Stock", color = Color(0xFF006400))
+                    if (item.availability) {
+                        Icon(
+                            imageVector = Icons.Default.Check,
+                            contentDescription = "Green Check Mark",
+                            tint = Color(0xFF006400)
+                        )
+                        Text(" In Stock", color = Color(0xFF006400))
+                    } else {
+                        Icon(
+                            imageVector = Icons.Default.Warning,
+                            contentDescription = "Warning Sign",
+                            tint = Color(0xFF8B0000)
+                        )
+                        Text(" Out of Stock", color = Color(0xFF8B0000))
+                    }
                 }
-                Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.", textAlign = TextAlign.Center, modifier = modifier.padding(15.dp))
-                Button(onClick = {}, modifier.align(Alignment.CenterHorizontally).padding(bottom = 10.dp)) {
+                Text(item.description, textAlign = TextAlign.Center, modifier = modifier
+                    .padding(15.dp)
+                    .fillMaxWidth())
+                Button(onClick = {}, modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(bottom = 10.dp)) {
                     Icon(imageVector = Icons.Default.ShoppingCart, contentDescription = "Shopping Cart Logo")
                     Text("  Add to Shopping List")
                 }
