@@ -4,14 +4,20 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import ie.setu.mad2_assignment_one.data.ShoppingItem
+import ie.setu.mad2_assignment_one.navigation.ItemDetails
+import ie.setu.mad2_assignment_one.navigation.Main
+import ie.setu.mad2_assignment_one.navigation.ShoppingList
+import ie.setu.mad2_assignment_one.ui.ItemDetailsScreen
+import ie.setu.mad2_assignment_one.ui.main.MainScreen
+import ie.setu.mad2_assignment_one.ui.shopping.ShoppingListScreen
 import ie.setu.mad2_assignment_one.ui.theme.Mad2assignmentoneTheme
+import ie.setu.mad2_assignment_one.viewmodel.ItemViewModel
+import ie.setu.mad2_assignment_one.viewmodel.ShoppingListViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,29 +25,48 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             Mad2assignmentoneTheme {
-                Scaffold( modifier = Modifier.fillMaxSize() ) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                // define nav controller + host
+                val navController = rememberNavController()
+
+                // define item view model
+                val itemViewModel: ItemViewModel = viewModel()
+
+                // define shopping list view model
+                val shoppingListViewModel: ShoppingListViewModel = viewModel()
+
+                NavHost(navController, startDestination = Main) {
+                    composable<Main> {
+                        MainScreen(
+                            onNavigateToShoppingList = { navController.navigate(route = ShoppingList) },
+                            onItemClick = { item ->
+                                itemViewModel.selectItem(item as ShoppingItem) // Save item in ViewModel
+                                navController.navigate(route = ItemDetails)
+                            }
+                        )
+                    }
+                    composable<ShoppingList> {
+                        ShoppingListScreen(
+                            onNavigateBack = { navController.popBackStack() },  // Go back dynamically
+                            shoppingListViewModel = shoppingListViewModel,
+                            onItemClick = { item ->
+                                itemViewModel.selectItem(item)
+                                navController.navigate(route = ItemDetails)
+                            }
+                        )
+                    }
+                    composable<ItemDetails> {
+                        // Access the selected item from the ViewModel
+                        val selectedItem = itemViewModel.selectedItem.value
+                        if (selectedItem != null) {
+                            ItemDetailsScreen(
+                                item = selectedItem,
+                                onNavigateBack = { navController.popBackStack() },
+                                shoppingListViewModel = shoppingListViewModel
+                            )
+                        }
+                    }
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    Mad2assignmentoneTheme {
-        Greeting("Android")
     }
 }
