@@ -1,4 +1,5 @@
 package ie.setu.mad2_assignment_one.ui.shopping
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,6 +15,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -27,7 +29,7 @@ import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ShoppingListScreen(modifier: Modifier = Modifier) {
+fun ShoppingListScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit, onItemClick: () -> Unit) {
     var value: Double
     var total = 0.00
     Column {
@@ -35,7 +37,13 @@ fun ShoppingListScreen(modifier: Modifier = Modifier) {
             TopAppBar(
                 title = { Text("Shopping List") },
                 modifier = modifier,
-                navigationIcon = { Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back Button") },
+                navigationIcon = {
+                    IconButton(
+                        onClick = onNavigateBack,
+                    ) {
+                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back Button")
+                    }
+                                 },
             )
         }
         LazyColumn(modifier
@@ -43,9 +51,11 @@ fun ShoppingListScreen(modifier: Modifier = Modifier) {
             .padding(bottom = 25.dp)) {
             items(20) { item ->
                 Card(
-                    modifier
+                    modifier = modifier
                         .padding(8.dp)
                         .fillMaxWidth()
+                        .clickable { },
+                    onClick = onItemClick
                 ) {
                     Row(
                         modifier
@@ -87,10 +97,14 @@ fun ShoppingListScreen(modifier: Modifier = Modifier) {
             }
             item {
                 Box {
-                    Box (modifier.fillMaxWidth().padding(top = 10.dp, start = 10.dp)){
+                    Box (modifier
+                        .fillMaxWidth()
+                        .padding(top = 10.dp, start = 10.dp)){
                         Text(text = "Total -> €${total.roundToInt()}.55", fontSize = 25.sp)
                     }
-                    Box (modifier.fillMaxWidth().padding(end = 15.dp) ,contentAlignment = Alignment.BottomEnd) {
+                    Box (modifier
+                        .fillMaxWidth()
+                        .padding(end = 15.dp) ,contentAlignment = Alignment.BottomEnd) {
                         Button(
                             onClick = {},
                             modifier = modifier,
@@ -110,5 +124,5 @@ fun ShoppingListScreen(modifier: Modifier = Modifier) {
 @Preview
 @Composable
 fun ShoppingListScreenPreview() {
-    ShoppingListScreen()
+    //hoppingListScreen()
 }

@@ -7,6 +7,7 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -42,7 +43,7 @@ import androidx.compose.ui.unit.sp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(modifier: Modifier = Modifier) {
+fun MainScreen(modifier: Modifier = Modifier, onNavigateToShoppingList: () -> Unit, onItemClick: () -> Unit) {
     Column (modifier = modifier
         .verticalScroll(rememberScrollState())) {
         Row {
@@ -84,7 +85,7 @@ fun MainScreen(modifier: Modifier = Modifier) {
             .align(Alignment.CenterHorizontally)
             .padding(top = 25.dp)) {
             Button(
-                onClick = {},
+                onClick = onNavigateToShoppingList,
                 modifier = modifier,
                 enabled = true,
             ) {
@@ -121,7 +122,7 @@ fun MainScreen(modifier: Modifier = Modifier) {
             .offset(y = offsetY.dp)) {
             Text("Swipe up to view all stock", fontSize = 26.sp)
         }
-        ScrollableGrid()
+        ScrollableGrid(onItemClick = onItemClick)
     }
 }
 
@@ -137,7 +138,7 @@ fun SearchBar(query:String, onQueryChange: (String) -> Unit) {
 }
 
 @Composable
-fun ScrollableGrid(modifier: Modifier = Modifier) {
+fun ScrollableGrid(modifier: Modifier = Modifier, onItemClick: () -> Unit) {
     Column(modifier = modifier.padding(top=75.dp, bottom = 50.dp)) {
         for (item in 1..10 step 2) { // step 2 to skip every second item
             Row(
@@ -151,7 +152,9 @@ fun ScrollableGrid(modifier: Modifier = Modifier) {
                     Card(
                         modifier = Modifier
                             .padding(8.dp)
-                            .fillMaxWidth(),
+                            .fillMaxWidth()
+                            .clickable {}, // make card clickable
+                        onClick = onItemClick,
                         elevation = CardDefaults.cardElevation(4.dp)
                     ) {
                         Row (modifier = modifier
@@ -174,12 +177,15 @@ fun ScrollableGrid(modifier: Modifier = Modifier) {
                 // Second item in the row
                 if (item + 1 <= 10) { // Check if there is a second item
                     Column(
-                        modifier = Modifier.weight(1f) // Each item takes up 50% of the row
+                        modifier = Modifier
+                            .weight(1f) // Each item takes up 50% of the row
                     ) {
                         Card(
                             modifier = Modifier
                                 .padding(8.dp)
-                                .fillMaxWidth(),
+                                .fillMaxWidth()
+                                .clickable { }, // Make card clickable
+                            onClick = onItemClick,
                             elevation = CardDefaults.cardElevation(4.dp)
                         ) {
                             Row (modifier = modifier
@@ -208,7 +214,7 @@ fun ScrollableGrid(modifier: Modifier = Modifier) {
 @Preview
 @Composable
 fun PreviewMainScreen(){
-    MainScreen()
+    // MainScreen()
 }
 
 @Preview
@@ -223,5 +229,5 @@ fun SearchBarPreview() {
 @Preview
 @Composable
 fun ScrollableGridPreview(){
-    ScrollableGrid()
+    //ScrollableGrid()
 }
