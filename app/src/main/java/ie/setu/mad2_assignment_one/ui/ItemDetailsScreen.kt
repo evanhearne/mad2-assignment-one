@@ -30,10 +30,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ie.setu.mad2_assignment_one.data.ShoppingItem
+import ie.setu.mad2_assignment_one.data.ShoppingListItem
+import ie.setu.mad2_assignment_one.viewmodel.ShoppingListViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ItemDetailsScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit, item: ShoppingItem) {
+fun ItemDetailsScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit, item: ShoppingItem, shoppingListViewModel: ShoppingListViewModel) {
     Column { 
         Row {
             TopAppBar(
@@ -87,11 +89,20 @@ fun ItemDetailsScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit,
                 Text(item.description, textAlign = TextAlign.Center, modifier = modifier
                     .padding(15.dp)
                     .fillMaxWidth())
-                Button(onClick = {}, modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(bottom = 10.dp)) {
-                    Icon(imageVector = Icons.Default.ShoppingCart, contentDescription = "Shopping Cart Logo")
-                    Text("  Add to Shopping List")
+                if (item.availability) {
+                    Button(
+                        onClick = {
+                            shoppingListViewModel.addItem(ShoppingListItem(item, 1))
+                        }, modifier
+                            .align(Alignment.CenterHorizontally)
+                            .padding(bottom = 10.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.ShoppingCart,
+                            contentDescription = "Shopping Cart Logo"
+                        )
+                        Text("  Add to Shopping List")
+                    }
                 }
             }
         }

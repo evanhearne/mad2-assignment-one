@@ -17,6 +17,7 @@ import ie.setu.mad2_assignment_one.ui.main.MainScreen
 import ie.setu.mad2_assignment_one.ui.shopping.ShoppingListScreen
 import ie.setu.mad2_assignment_one.ui.theme.Mad2assignmentoneTheme
 import ie.setu.mad2_assignment_one.viewmodel.ItemViewModel
+import ie.setu.mad2_assignment_one.viewmodel.ShoppingListViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,6 +30,9 @@ class MainActivity : ComponentActivity() {
 
                 // define item view model
                 val itemViewModel: ItemViewModel = viewModel()
+
+                // define shopping list view model
+                val shoppingListViewModel: ShoppingListViewModel = viewModel()
 
                 NavHost(navController, startDestination = Main) {
                     composable<Main> {
@@ -43,7 +47,9 @@ class MainActivity : ComponentActivity() {
                     composable<ShoppingList> {
                         ShoppingListScreen(
                             onNavigateBack = { navController.popBackStack() },  // Go back dynamically
-                            onItemClick = {
+                            shoppingListViewModel = shoppingListViewModel,
+                            onItemClick = { item ->
+                                itemViewModel.selectItem(item)
                                 navController.navigate(route = ItemDetails)
                             }
                         )
@@ -54,7 +60,8 @@ class MainActivity : ComponentActivity() {
                         if (selectedItem != null) {
                             ItemDetailsScreen(
                                 item = selectedItem,
-                                onNavigateBack = { navController.popBackStack() }
+                                onNavigateBack = { navController.popBackStack() },
+                                shoppingListViewModel = shoppingListViewModel
                             )
                         }
                     }

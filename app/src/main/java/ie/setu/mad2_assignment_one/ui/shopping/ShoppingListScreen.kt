@@ -24,14 +24,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kotlin.math.round
-import kotlin.math.roundToInt
+import ie.setu.mad2_assignment_one.data.ShoppingItem
+import ie.setu.mad2_assignment_one.viewmodel.ShoppingListViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ShoppingListScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit, onItemClick: () -> Unit) {
-    var value: Double
-    var total = 0.00
+fun ShoppingListScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit, shoppingListViewModel: ShoppingListViewModel, onItemClick: (ShoppingItem) -> Unit) {
+    var total: Double
     Column {
         Row {
             TopAppBar(
@@ -48,65 +47,77 @@ fun ShoppingListScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit
         }
         LazyColumn(modifier
             .align(Alignment.CenterHorizontally)
-            .padding(bottom = 25.dp)) {
-            items(20) { item ->
-                Card(
-                    modifier = modifier
-                        .padding(8.dp)
-                        .fillMaxWidth()
-                        .clickable { },
-                    onClick = onItemClick
-                ) {
-                    Row(
-                        modifier
-                            .align(Alignment.CenterHorizontally),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.ShoppingCart,
-                            contentDescription = "Shopping List Item $item",
-                            modifier
-                                .padding(5.dp)
-                                .size(50.dp)
-                        )
-                        Text("Item $item", modifier.padding(8.dp), fontSize = 20.sp)
-                        Text(
-                            "x ${(Math.random() * 10).roundToInt()}",
-                            modifier.padding(8.dp),
-                            fontSize = 20.sp
-                        )
-                        value = round(Math.random() * 1000) / 100
-                        total += value
-                        Text("@ $value ea ", fontSize = 20.sp)
-                        FilledIconButton(
-                            onClick = {},
-                            modifier = modifier,
-                            enabled = true,
+            .padding(top = 100.dp, bottom = 25.dp)) {
+            val shoppingList = shoppingListViewModel.shoppingList
+            if (shoppingList.isEmpty()) {
+                item {
+                    Text("You have no items in your shopping list. ")
+                }
+            } else {
+                total = 0.00 // reset price when update list
+                for (item in shoppingList) {
+                    item {
+                        Card(
+                            modifier = modifier
+                                .padding(8.dp)
+                                .fillMaxWidth()
+                                .clickable { onItemClick(item.shoppingItem) },
                         ) {
-                            Text("—", fontSize = 20.sp)
-                        }
-                        FilledIconButton(
-                            onClick = {},
-                            modifier = modifier,
-                            enabled = true,
-                        ) {
-                            Text("+", fontSize = 20.sp)
+                            Row(
+                                modifier
+                                    .align(Alignment.CenterHorizontally),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.ShoppingCart,
+                                    contentDescription = "${item.shoppingItem.name} Image",
+                                    modifier
+                                        .padding(5.dp)
+                                        .size(50.dp)
+                                )
+                                Text(item.shoppingItem.name, modifier.padding(8.dp), fontSize = 20.sp)
+                            }
+                            Row(modifier = modifier.align(Alignment.CenterHorizontally).padding(bottom = 6.dp)) {
+                                Text(
+                                    "x ${item.quantity}",
+                                    fontSize = 20.sp
+                                )
+                                total += item.shoppingItem.price * item.quantity
+                                Text("   @ ${item.shoppingItem.price} ea ", fontSize = 20.sp)
+                            }
+                            Row (modifier = modifier
+                                .align(Alignment.CenterHorizontally)){
+                                FilledIconButton(
+                                    onClick = { shoppingListViewModel.decreaseItemQuantity(item) },
+                                    modifier = modifier,
+                                    enabled = true,
+                                ) {
+                                    Text("—", fontSize = 20.sp)
+                                }
+                                FilledIconButton(
+                                    onClick = { shoppingListViewModel.increaseItemQuantity(item) },
+                                    modifier = modifier,
+                                    enabled = true,
+                                ) {
+                                    Text("+", fontSize = 20.sp)
+                                }
+                            }
                         }
                     }
                 }
-            }
-            item {
-                Box {
-                    Box (modifier
-                        .fillMaxWidth()
-                        .padding(top = 10.dp, start = 10.dp)){
-                        Text(text = "Total -> €${total.roundToInt()}.55", fontSize = 25.sp)
-                    }
+                item {
+                    Box {
+                        Box (modifier
+                            .fillMaxWidth()
+                            .padding(top = 10.dp, start = 10.dp)){
+                            Text(text = "Total -> €${"%.2f".format(total)}", fontSize = 25.sp) // format total to 2dp as weird 3 decimal place observed for certain additions
+                        }
+                        }
                     Box (modifier
                         .fillMaxWidth()
                         .padding(end = 15.dp) ,contentAlignment = Alignment.BottomEnd) {
                         Button(
-                            onClick = {},
+                            onClick = {shoppingListViewModel.removeAllItems()},
                             modifier = modifier,
                             enabled = true,
                         ) {
@@ -115,8 +126,7 @@ fun ShoppingListScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit
                     }
 
                 }
-
-                }
+            }
             }
         }
     }
