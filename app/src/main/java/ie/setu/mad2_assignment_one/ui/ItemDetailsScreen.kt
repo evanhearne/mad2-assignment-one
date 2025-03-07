@@ -1,5 +1,6 @@
 package ie.setu.mad2_assignment_one.ui
 
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,6 +25,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -41,7 +43,7 @@ import ie.setu.mad2_assignment_one.viewmodel.ShoppingListViewModel
 // Item Details Screen
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ItemDetailsScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit, item: ShoppingItem, shoppingListViewModel: ShoppingListViewModel) {
+fun ItemDetailsScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit, item: ShoppingItem, shoppingListViewModel: ShoppingListViewModel, context: Context) {
     Column { 
         Row {
             // Top App Bar for Item Details Screen
@@ -108,7 +110,7 @@ fun ItemDetailsScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit,
                 if (item.availability) {
                     Button(
                         onClick = {
-                            shoppingListViewModel.addItem(ShoppingListItem(item, 1))
+                            shoppingListViewModel.addItem(ShoppingListItem(item, 1), context = context)
                         }, modifier
                             .align(Alignment.CenterHorizontally)
                             .padding(bottom = 10.dp)
@@ -132,6 +134,7 @@ fun PreviewItemDetailsScreen() {
     ItemDetailsScreen(
         onNavigateBack = {},
         item = ShoppingItem(0, "AA", "aaa", 0.00, true),
-        shoppingListViewModel = ShoppingListViewModel()
+        shoppingListViewModel = ShoppingListViewModel(),
+        context = LocalContext.current
     )
 }

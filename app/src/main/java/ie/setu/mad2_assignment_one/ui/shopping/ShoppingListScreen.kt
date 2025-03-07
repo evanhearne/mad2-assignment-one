@@ -1,4 +1,5 @@
 package ie.setu.mad2_assignment_one.ui.shopping
+import android.content.Context
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,6 +22,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -31,7 +33,7 @@ import ie.setu.mad2_assignment_one.viewmodel.ShoppingListViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ShoppingListScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit, shoppingListViewModel: ShoppingListViewModel, onItemClick: (ShoppingItem) -> Unit) {
+fun ShoppingListScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit, shoppingListViewModel: ShoppingListViewModel, onItemClick: (ShoppingItem) -> Unit, context: Context) {
     // total variable is used to display total at the end of the shopping list
     // it is calculated on the fly.
     var total: Double
@@ -111,7 +113,7 @@ fun ShoppingListScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit
                                 .align(Alignment.CenterHorizontally)){
                                 // Decrement Item Quantity
                                 FilledIconButton(
-                                    onClick = { shoppingListViewModel.decreaseItemQuantity(item) },
+                                    onClick = { shoppingListViewModel.decreaseItemQuantity(item, context = context) },
                                     modifier = modifier,
                                     enabled = true,
                                 ) {
@@ -119,7 +121,7 @@ fun ShoppingListScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit
                                 }
                                 // Increment Item Quantity
                                 FilledIconButton(
-                                    onClick = { shoppingListViewModel.increaseItemQuantity(item) },
+                                    onClick = { shoppingListViewModel.increaseItemQuantity(item, context) },
                                     modifier = modifier,
                                     enabled = true,
                                 ) {
@@ -142,7 +144,7 @@ fun ShoppingListScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit
                         .fillMaxWidth()
                         .padding(end = 15.dp) ,contentAlignment = Alignment.BottomEnd) {
                         Button(
-                            onClick = {shoppingListViewModel.removeAllItems()},
+                            onClick = {shoppingListViewModel.removeAllItems(context = context)},
                             modifier = modifier,
                             enabled = true,
                         ) {
@@ -161,6 +163,7 @@ fun ShoppingListScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit
 @Composable
 fun ShoppingListScreenPreview() {
     ShoppingListScreen(onNavigateBack = {}, onItemClick = {},
-        shoppingListViewModel = ShoppingListViewModel()
+        shoppingListViewModel = ShoppingListViewModel(),
+        context = LocalContext.current
     )
 }

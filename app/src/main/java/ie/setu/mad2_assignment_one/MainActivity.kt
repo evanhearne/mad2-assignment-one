@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -25,6 +26,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             Mad2assignmentoneTheme {
+                // define context
+
+                val context = LocalContext.current
                 // define nav controller + host
                 val navController = rememberNavController()
 
@@ -33,6 +37,9 @@ class MainActivity : ComponentActivity() {
 
                 // define shopping list view model
                 val shoppingListViewModel: ShoppingListViewModel = viewModel()
+
+                // load shopping list
+                shoppingListViewModel.loadShoppingList(context)
 
                 // navhost
                 NavHost(navController, startDestination = Main) {
@@ -54,7 +61,8 @@ class MainActivity : ComponentActivity() {
                             onItemClick = { item ->
                                 itemViewModel.selectItem(item)
                                 navController.navigate(route = ItemDetails)
-                            }
+                            },
+                            context = context
                         )
                     }
                     // Item Details Screen
@@ -65,7 +73,8 @@ class MainActivity : ComponentActivity() {
                             ItemDetailsScreen(
                                 item = selectedItem,
                                 onNavigateBack = { navController.popBackStack() },
-                                shoppingListViewModel = shoppingListViewModel
+                                shoppingListViewModel = shoppingListViewModel,
+                                context = context
                             )
                         }
                     }
