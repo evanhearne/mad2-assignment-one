@@ -16,7 +16,7 @@ data class ShoppingItem(
 )
 
 fun loadShoppingItems(context: Context): List<ShoppingItem> {
-    val rawId = R.raw.shopping_items
+    val rawId = R.raw.shopping_items // JSON file for shopping items
     if (rawId == 0) return emptyList()
 
     val jsonString = context.resources.openRawResource(rawId).bufferedReader().use { it.readText() }

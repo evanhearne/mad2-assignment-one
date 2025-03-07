@@ -24,44 +24,56 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ie.setu.mad2_assignment_one.R
 import ie.setu.mad2_assignment_one.data.ShoppingItem
 import ie.setu.mad2_assignment_one.data.ShoppingListItem
+import ie.setu.mad2_assignment_one.ui.theme.itemAvailableBackgroundColor
+import ie.setu.mad2_assignment_one.ui.theme.itemAvailableColor
+import ie.setu.mad2_assignment_one.ui.theme.itemUnavailableBackgroundColor
+import ie.setu.mad2_assignment_one.ui.theme.itemUnavailableColor
 import ie.setu.mad2_assignment_one.viewmodel.ShoppingListViewModel
 
+// Item Details Screen
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ItemDetailsScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit, item: ShoppingItem, shoppingListViewModel: ShoppingListViewModel) {
     Column { 
         Row {
+            // Top App Bar for Item Details Screen
             TopAppBar(
-                title = { Text("Item Details") },
+                title = { Text(stringResource(R.string.item_details_screen_top_app_bar_title)) },
                 modifier = modifier,
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back Button")
+                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back_button_content_description))
 
                     }
                                  },
             )
         }
+        // Item Details Card
         Row (modifier= modifier.fillMaxHeight(), verticalAlignment = Alignment.CenterVertically) {
             Card(modifier = modifier
                 .fillMaxWidth()
                 .padding(15.dp)) {
-                Image(imageVector = Icons.Default.Star, contentDescription = "Item Image", Modifier
+                // Item Image
+                Image(imageVector = Icons.Default.Star, contentDescription = stringResource(R.string.item_image_content_description), Modifier
                     .size(110.dp)
                     .align(Alignment.CenterHorizontally)
                     .padding(top = 10.dp))
+                // Item Name
                 Text(item.name, modifier = modifier.align(Alignment.CenterHorizontally), fontSize = 30.sp)
+                // Item Price
                 Text("${item.price}", modifier = modifier.align(Alignment.CenterHorizontally), fontSize = 25.sp)
-                var color = Color(0xFFCCFFCC)
+                var color = itemAvailableBackgroundColor
                 if (!item.availability)
-                    color = Color(0xFFFF6666)
+                    color = itemUnavailableBackgroundColor
+                // Item Availability
                 Button(
                     onClick = {},
                     modifier = modifier
@@ -70,25 +82,29 @@ fun ItemDetailsScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit,
                     enabled = false,
                     colors = ButtonDefaults.buttonColors(disabledContainerColor = color)
                 ) {
+                    // checks item's availability to show different icon as needed
                     if (item.availability) {
                         Icon(
                             imageVector = Icons.Default.Check,
-                            contentDescription = "Green Check Mark",
-                            tint = Color(0xFF006400)
+                            contentDescription = stringResource(R.string.item_available_icon_content_description),
+                            tint = itemAvailableColor
                         )
-                        Text(" In Stock", color = Color(0xFF006400))
+                        Text(stringResource(R.string.in_stock), color = itemAvailableColor)
                     } else {
                         Icon(
                             imageVector = Icons.Default.Warning,
-                            contentDescription = "Warning Sign",
-                            tint = Color(0xFF8B0000)
+                            contentDescription = stringResource(R.string.item_unavailable_icon_content_description),
+                            tint = itemUnavailableColor
                         )
-                        Text(" Out of Stock", color = Color(0xFF8B0000))
+                        Text(stringResource(R.string.out_of_stock), color = itemUnavailableColor)
                     }
                 }
+                // Item Description
                 Text(item.description, textAlign = TextAlign.Center, modifier = modifier
                     .padding(15.dp)
                     .fillMaxWidth())
+                // Add to Shopping List Button
+                // only shows if item is available
                 if (item.availability) {
                     Button(
                         onClick = {
@@ -99,9 +115,9 @@ fun ItemDetailsScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit,
                     ) {
                         Icon(
                             imageVector = Icons.Default.ShoppingCart,
-                            contentDescription = "Shopping Cart Logo"
+                            contentDescription = stringResource(R.string.shopping_cart_logo)
                         )
-                        Text("  Add to Shopping List")
+                        Text(stringResource(R.string.add_to_shopping_list))
                     }
                 }
             }
@@ -109,8 +125,13 @@ fun ItemDetailsScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit,
     }
 }
 
+// Item Details Screen Preview
 @Preview
 @Composable
 fun PreviewItemDetailsScreen() {
-    //ItemDetailsScreen()
+    ItemDetailsScreen(
+        onNavigateBack = {},
+        item = ShoppingItem(0, "AA", "aaa", 0.00, true),
+        shoppingListViewModel = ShoppingListViewModel()
+    )
 }

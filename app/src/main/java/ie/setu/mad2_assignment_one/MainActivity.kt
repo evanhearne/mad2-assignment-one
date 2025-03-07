@@ -34,7 +34,9 @@ class MainActivity : ComponentActivity() {
                 // define shopping list view model
                 val shoppingListViewModel: ShoppingListViewModel = viewModel()
 
+                // navhost
                 NavHost(navController, startDestination = Main) {
+                    // Main Screen
                     composable<Main> {
                         MainScreen(
                             onNavigateToShoppingList = { navController.navigate(route = ShoppingList) },
@@ -44,6 +46,7 @@ class MainActivity : ComponentActivity() {
                             }
                         )
                     }
+                    // Shopping List Screen
                     composable<ShoppingList> {
                         ShoppingListScreen(
                             onNavigateBack = { navController.popBackStack() },  // Go back dynamically
@@ -54,6 +57,7 @@ class MainActivity : ComponentActivity() {
                             }
                         )
                     }
+                    // Item Details Screen
                     composable<ItemDetails> {
                         // Access the selected item from the ViewModel
                         val selectedItem = itemViewModel.selectedItem.value

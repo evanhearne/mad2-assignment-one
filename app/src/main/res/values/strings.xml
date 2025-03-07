@@ -1,3 +1,25 @@
 <resources>
     <string name="app_name">mad2-assignment-one</string>
+    <string name="main_screen_top_bar_title">Home</string>
+    <string name="choose_store_button_content_description">Choose Store</string>
+    <string name="choose_store_button_text">"  Choose Store"</string>
+    <string name="besco_logo_content_description">Shopping Cart Image</string>
+    <string name="main_screen_welcome_text">Welcome to Besco!</string>
+    <string name="shopping_cart_image_content_description">Shopping Cart Image</string>
+    <string name="view_shopping_list_button_text">" View Shopping List"</string>
+    <string name="main_screen_user_swipe_prompt">Swipe up to view all stock</string>
+    <string name="main_screen_search_bar_placeholder">Search for your items…</string>
+    <string name="search_icon_content_description">Search Icon</string>
+    <string name="shopping_list_screen_top_app_bar_title">Shopping List</string>
+    <string name="back_button_content_description">Back Button</string>
+    <string name="shopping_list_empty">"You have no items in your shopping list. "</string>
+    <string name="remove_all_items">Remove All Items</string>
+    <string name="item_details_screen_top_app_bar_title">Item Details</string>
+    <string name="item_image_content_description">Item Image</string>
+    <string name="item_available_icon_content_description">Green Check Mark</string>
+    <string name="in_stock">" In Stock"</string>
+    <string name="item_unavailable_icon_content_description">Warning Sign</string>
+    <string name="out_of_stock">" Out of Stock"</string>
+    <string name="shopping_cart_logo">Shopping Cart Logo</string>
+    <string name="add_to_shopping_list">"  Add to Shopping List"</string>
 </resources>

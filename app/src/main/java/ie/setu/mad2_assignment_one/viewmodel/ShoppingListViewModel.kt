@@ -16,7 +16,7 @@ class ShoppingListViewModel : ViewModel() {
     }
 
     // Method to remove an item
-    fun removeItem(item: ShoppingListItem) {
+    private fun removeItem(item: ShoppingListItem) {
         _shoppingList.remove(item)
     }
 
