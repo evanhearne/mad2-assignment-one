@@ -2,6 +2,8 @@ package ie.setu.mad2_assignment_one.navigation
 
 import kotlinx.serialization.Serializable
 
+// navhost points to navigate to within app defined here.
+
 @Serializable
 object ShoppingList
 

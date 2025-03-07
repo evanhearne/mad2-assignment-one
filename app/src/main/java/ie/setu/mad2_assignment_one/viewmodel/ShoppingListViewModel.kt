@@ -1,43 +1,62 @@
 package ie.setu.mad2_assignment_one.viewmodel
 
+import android.content.Context
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import ie.setu.mad2_assignment_one.data.ShoppingListItem
+import ie.setu.mad2_assignment_one.data.ShoppingListItemList
 
-class ShoppingListViewModel : ViewModel() {
-    // A mutable list to hold shopping items
+class ShoppingListViewModel() : ViewModel() {
+
     private val _shoppingList = mutableStateListOf<ShoppingListItem>()
     val shoppingList: SnapshotStateList<ShoppingListItem> = _shoppingList
 
-    // Method to add an item
-    fun addItem(item: ShoppingListItem) {
+    fun loadShoppingList(context: Context) {
+        val savedList = ShoppingListItemList.readFromStorage(context)
+        savedList?.let {
+            _shoppingList.addAll(it.list)
+        }
+    }
+
+    private fun saveShoppingList(context: Context) {
+        ShoppingListItemList.saveToStorage(context, ShoppingListItemList(_shoppingList))
+    }
+
+    fun addItem(item: ShoppingListItem, context: Context) {
         _shoppingList.add(item)
+        saveShoppingList(context)
     }
 
-    // Method to remove an item
-    fun removeItem(item: ShoppingListItem) {
+    private fun removeItem(item: ShoppingListItem, context: Context) {
         _shoppingList.remove(item)
+        saveShoppingList(context)
     }
 
-    // Method to remove all items
-    fun removeAllItems() {
+    fun removeAllItems(context: Context) {
         _shoppingList.clear()
+        saveShoppingList(context)
     }
 
-    // Increase quantity
-    fun increaseItemQuantity(item: ShoppingListItem) {
-        val newItem = ShoppingListItem(item.shoppingItem, item.quantity+1)
-        _shoppingList[_shoppingList.indexOf(item)] = newItem
+    fun increaseItemQuantity(item: ShoppingListItem, context: Context) {
+        val index = _shoppingList.indexOf(item)
+        if (index != -1) {
+            val newItem = item.copy(quantity = item.quantity + 1)
+            _shoppingList[index] = newItem
+            saveShoppingList(context)
+        }
     }
 
-    // Decrease quantity
-    fun decreaseItemQuantity(item: ShoppingListItem) {
-        val newItem = ShoppingListItem(item.shoppingItem, item.quantity-1)
-        if (newItem.quantity < 1) {
-            removeItem(item)
-        } else {
-            _shoppingList[_shoppingList.indexOf(item)] = newItem
+    fun decreaseItemQuantity(item: ShoppingListItem, context: Context) {
+        val index = _shoppingList.indexOf(item)
+        if (index != -1) {
+            val newQuantity = item.quantity - 1
+            if (newQuantity < 1) {
+                removeItem(item, context)
+            } else {
+                _shoppingList[index] = item.copy(quantity = newQuantity)
+                saveShoppingList(context)
+            }
         }
     }
 }

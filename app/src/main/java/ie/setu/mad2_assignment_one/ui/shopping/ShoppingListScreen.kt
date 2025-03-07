@@ -1,4 +1,5 @@
 package ie.setu.mad2_assignment_one.ui.shopping
+import android.content.Context
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,42 +22,58 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ie.setu.mad2_assignment_one.R
 import ie.setu.mad2_assignment_one.data.ShoppingItem
 import ie.setu.mad2_assignment_one.viewmodel.ShoppingListViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ShoppingListScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit, shoppingListViewModel: ShoppingListViewModel, onItemClick: (ShoppingItem) -> Unit) {
+fun ShoppingListScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit, shoppingListViewModel: ShoppingListViewModel, onItemClick: (ShoppingItem) -> Unit, context: Context) {
+    // total variable is used to display total at the end of the shopping list
+    // it is calculated on the fly.
     var total: Double
+    // Top App Bar
     Column {
         Row {
             TopAppBar(
-                title = { Text("Shopping List") },
+                title = { Text(stringResource(R.string.shopping_list_screen_top_app_bar_title)) },
                 modifier = modifier,
                 navigationIcon = {
                     IconButton(
                         onClick = onNavigateBack,
                     ) {
-                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back Button")
+                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(
+                            R.string.back_button_content_description
+                        )
+                        )
                     }
                                  },
             )
         }
+        // List generation begins here...
         LazyColumn(modifier
             .align(Alignment.CenterHorizontally)
             .padding(top = 100.dp, bottom = 25.dp)) {
+            // load in view model for shopping list
             val shoppingList = shoppingListViewModel.shoppingList
+            // if there are no shopping items the list is empty.
+            // the user receives a text letting them know this.
             if (shoppingList.isEmpty()) {
                 item {
-                    Text("You have no items in your shopping list. ")
+                    Text(stringResource(R.string.shopping_list_empty))
                 }
             } else {
+                // otherwise if there are items it will begin list generation...
                 total = 0.00 // reset price when update list
+                // iterate through all items in the shopping list
                 for (item in shoppingList) {
                     item {
+                        // shopping list item card
                         Card(
                             modifier = modifier
                                 .padding(8.dp)
@@ -68,6 +85,7 @@ fun ShoppingListScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit
                                     .align(Alignment.CenterHorizontally),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
+                                // Shopping List Item Image
                                 Icon(
                                     imageVector = Icons.Default.ShoppingCart,
                                     contentDescription = "${item.shoppingItem.name} Image",
@@ -75,27 +93,35 @@ fun ShoppingListScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit
                                         .padding(5.dp)
                                         .size(50.dp)
                                 )
+                                // Shopping list item name
                                 Text(item.shoppingItem.name, modifier.padding(8.dp), fontSize = 20.sp)
                             }
-                            Row(modifier = modifier.align(Alignment.CenterHorizontally).padding(bottom = 6.dp)) {
+                            Row(modifier = modifier
+                                .align(Alignment.CenterHorizontally)
+                                .padding(bottom = 6.dp)) {
+                                // Item Quantity
                                 Text(
                                     "x ${item.quantity}",
                                     fontSize = 20.sp
                                 )
+                                // Calculate total by adding the item price * quantity to total var...
                                 total += item.shoppingItem.price * item.quantity
+                                // Item Price
                                 Text("   @ ${item.shoppingItem.price} ea ", fontSize = 20.sp)
                             }
                             Row (modifier = modifier
                                 .align(Alignment.CenterHorizontally)){
+                                // Decrement Item Quantity
                                 FilledIconButton(
-                                    onClick = { shoppingListViewModel.decreaseItemQuantity(item) },
+                                    onClick = { shoppingListViewModel.decreaseItemQuantity(item, context = context) },
                                     modifier = modifier,
                                     enabled = true,
                                 ) {
                                     Text("—", fontSize = 20.sp)
                                 }
+                                // Increment Item Quantity
                                 FilledIconButton(
-                                    onClick = { shoppingListViewModel.increaseItemQuantity(item) },
+                                    onClick = { shoppingListViewModel.increaseItemQuantity(item, context) },
                                     modifier = modifier,
                                     enabled = true,
                                 ) {
@@ -105,6 +131,7 @@ fun ShoppingListScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit
                         }
                     }
                 }
+                // Total + Clear All Button
                 item {
                     Box {
                         Box (modifier
@@ -117,11 +144,11 @@ fun ShoppingListScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit
                         .fillMaxWidth()
                         .padding(end = 15.dp) ,contentAlignment = Alignment.BottomEnd) {
                         Button(
-                            onClick = {shoppingListViewModel.removeAllItems()},
+                            onClick = {shoppingListViewModel.removeAllItems(context = context)},
                             modifier = modifier,
                             enabled = true,
                         ) {
-                            Text("Remove All Items")
+                            Text(stringResource(R.string.remove_all_items))
                         }
                     }
 
@@ -131,8 +158,12 @@ fun ShoppingListScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit
         }
     }
 
+// Preview for shopping List Screen
 @Preview
 @Composable
 fun ShoppingListScreenPreview() {
-    //hoppingListScreen()
+    ShoppingListScreen(onNavigateBack = {}, onItemClick = {},
+        shoppingListViewModel = ShoppingListViewModel(),
+        context = LocalContext.current
+    )
 }

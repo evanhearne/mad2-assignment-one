@@ -9,3 +9,10 @@ val Pink80 = Color(0xFFEFB8C8)
 val Purple40 = Color(0xFF6650a4)
 val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
+
+// Item Availability Colors for Item Details Screen
+val itemAvailableBackgroundColor = Color(0xFFCCFFCC)
+val itemUnavailableBackgroundColor = Color(0xFFFF6666)
+
+val itemAvailableColor = Color(0xFF006400)
+val itemUnavailableColor = Color(0xFF8B0000)
