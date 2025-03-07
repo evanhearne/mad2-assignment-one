@@ -22,4 +22,13 @@
     <string name="out_of_stock">" Out of Stock"</string>
     <string name="shopping_cart_logo">Shopping Cart Logo</string>
     <string name="add_to_shopping_list">"  Add to Shopping List"</string>
+    <string name="register_screen_top_app_bar_title">Register</string>
+    <string name="register_screen_paragraph_1">In order to personalise your experience, we need to register you with an account.</string>
+    <string name="register_screen_paragraph_2">It is very simple - just provide your email and password, and tap register.</string>
+    <string name="register_button_text">Register</string>
+    <string name="email_text">Email</string>
+    <string name="password_text">Password</string>
+    <string name="login_screen_top_app_bar_title">Login</string>
+    <string name="login_screen_paragraph_1">Log in below using your email and password.</string>
+    <string name="login_text">Login</string>
 </resources>

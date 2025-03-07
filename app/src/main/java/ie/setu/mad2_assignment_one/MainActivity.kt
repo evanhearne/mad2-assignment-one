@@ -11,12 +11,16 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import ie.setu.mad2_assignment_one.data.ShoppingItem
 import ie.setu.mad2_assignment_one.navigation.ItemDetails
+import ie.setu.mad2_assignment_one.navigation.Login
 import ie.setu.mad2_assignment_one.navigation.Main
+import ie.setu.mad2_assignment_one.navigation.Register
 import ie.setu.mad2_assignment_one.navigation.ShoppingList
 import ie.setu.mad2_assignment_one.ui.ItemDetailsScreen
 import ie.setu.mad2_assignment_one.ui.main.MainScreen
 import ie.setu.mad2_assignment_one.ui.shopping.ShoppingListScreen
 import ie.setu.mad2_assignment_one.ui.theme.Mad2assignmentoneTheme
+import ie.setu.mad2_assignment_one.ui.user.LoginScreen
+import ie.setu.mad2_assignment_one.ui.user.RegisterScreen
 import ie.setu.mad2_assignment_one.viewmodel.ItemViewModel
 import ie.setu.mad2_assignment_one.viewmodel.ShoppingListViewModel
 
@@ -42,7 +46,7 @@ class MainActivity : ComponentActivity() {
                 shoppingListViewModel.loadShoppingList(context)
 
                 // navhost
-                NavHost(navController, startDestination = Main) {
+                NavHost(navController, startDestination = Login) {
                     // Main Screen
                     composable<Main> {
                         MainScreen(
@@ -77,6 +81,17 @@ class MainActivity : ComponentActivity() {
                                 context = context
                             )
                         }
+                    }
+                    composable<Register> {
+                        RegisterScreen(context = context, onNavigateToLoginScreen = { navController.navigate(route = Login) })
+                    }
+                    // Log in Screen
+                    composable<Login> {
+                        LoginScreen(context = context, onNavigateToHome = {
+                            navController.navigate(
+                                route = Main
+                            )
+                        }, onNavigateToRegistration = { navController.navigate(route = Register) })
                     }
                 }
             }
