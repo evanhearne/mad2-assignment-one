@@ -4,12 +4,19 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import ie.setu.mad2_assignment_one.data.ShoppingItem
+import ie.setu.mad2_assignment_one.data.loadShoppingItems
 import ie.setu.mad2_assignment_one.navigation.ItemDetails
 import ie.setu.mad2_assignment_one.navigation.Login
 import ie.setu.mad2_assignment_one.navigation.Main
@@ -30,37 +37,59 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             Mad2assignmentoneTheme {
-                // define context
-
                 val context = LocalContext.current
-                // define nav controller + host
                 val navController = rememberNavController()
 
-                // define item view model
+                // ViewModels
                 val itemViewModel: ItemViewModel = viewModel()
-
-                // define shopping list view model
                 val shoppingListViewModel: ShoppingListViewModel = viewModel()
 
-                // load shopping list
-                shoppingListViewModel.loadShoppingList(context)
+                // Ensure shopping list is loaded once
+                LaunchedEffect(Unit) {
+                    shoppingListViewModel.loadShoppingList(context)
+                }
 
-                // navhost
-                NavHost(navController, startDestination = Login) {
+                // Search query state
+                val query = remember { mutableStateOf("") }
+
+                // Scroll state
+                val scrollState = rememberScrollState()
+
+                // Load shopping items once
+                val allItems = remember { mutableStateOf(loadShoppingItems(context)) }
+
+                // Optimize filtering using derivedStateOf to avoid unnecessary recalculations
+                val filteredItems by remember {
+                    // https://developer.android.com/develop/ui/compose/side-effects#derivedstateof
+                    derivedStateOf {
+                        if (query.value != "") {
+                            allItems.value.filter { it.name.contains(query.value, ignoreCase = true) }
+                        } else {
+                            allItems.value
+                        }
+                    }
+                }
+
+                // Navigation host
+                NavHost(navController, startDestination = Main) {
                     // Main Screen
                     composable<Main> {
                         MainScreen(
                             onNavigateToShoppingList = { navController.navigate(route = ShoppingList) },
                             onItemClick = { item ->
-                                itemViewModel.selectItem(item as ShoppingItem) // Save item in ViewModel
+                                itemViewModel.selectItem(item as ShoppingItem)
                                 navController.navigate(route = ItemDetails)
-                            }
+                            },
+                            query = query,
+                            scrollState = scrollState,
+                            items = filteredItems // Use optimized filtered items
                         )
                     }
+
                     // Shopping List Screen
                     composable<ShoppingList> {
                         ShoppingListScreen(
-                            onNavigateBack = { navController.popBackStack() },  // Go back dynamically
+                            onNavigateBack = { navController.popBackStack() },
                             shoppingListViewModel = shoppingListViewModel,
                             onItemClick = { item ->
                                 itemViewModel.selectItem(item)
@@ -69,9 +98,9 @@ class MainActivity : ComponentActivity() {
                             context = context
                         )
                     }
+
                     // Item Details Screen
                     composable<ItemDetails> {
-                        // Access the selected item from the ViewModel
                         val selectedItem = itemViewModel.selectedItem.value
                         if (selectedItem != null) {
                             ItemDetailsScreen(
@@ -82,16 +111,19 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                     }
+
+                    // Register Screen
                     composable<Register> {
                         RegisterScreen(context = context, onNavigateToLoginScreen = { navController.navigate(route = Login) })
                     }
+
                     // Log in Screen
                     composable<Login> {
-                        LoginScreen(context = context, onNavigateToHome = {
-                            navController.navigate(
-                                route = Main
-                            )
-                        }, onNavigateToRegistration = { navController.navigate(route = Register) })
+                        LoginScreen(
+                            context = context,
+                            onNavigateToHome = { navController.navigate(route = Main) },
+                            onNavigateToRegistration = { navController.navigate(route = Register) }
+                        )
                     }
                 }
             }

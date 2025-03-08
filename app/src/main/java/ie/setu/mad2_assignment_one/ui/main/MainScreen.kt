@@ -7,13 +7,13 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -36,7 +36,9 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -52,98 +54,129 @@ import ie.setu.mad2_assignment_one.data.loadShoppingItems
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(modifier: Modifier = Modifier, onNavigateToShoppingList: () -> Unit, onItemClick: (Any?) -> Unit) {
-    Column (modifier = modifier
-        .verticalScroll(rememberScrollState())) {
-        Row {
-            // Top App Bar for Home Screen
-            TopAppBar(
-                title = { Text(stringResource(R.string.main_screen_top_bar_title)) },
-                modifier = modifier,
-                actions = {
-                    // Choose Store Button
-                    Button(
-                        onClick = {}, // needs to be defined for store selection in later iteration.
-                        modifier = modifier,
-                        enabled = true,
-                    ) {
-                        Icon(Icons.Filled.Place, contentDescription = stringResource(R.string.choose_store_button_content_description))
-                        Text(stringResource(R.string.choose_store_button_text))
+fun MainScreen(
+    modifier: Modifier = Modifier,
+    onNavigateToShoppingList: () -> Unit,
+    onItemClick: (Any?) -> Unit,
+    query: MutableState<String>,
+    scrollState: ScrollState,
+    items: List<ShoppingItem>
+) {
+        Column(modifier.verticalScroll(scrollState).padding(bottom = 50.dp)) {
+            Row {
+                // Top App Bar for Home Screen
+                TopAppBar(
+                    title = { Text(stringResource(R.string.main_screen_top_bar_title)) },
+                    modifier = modifier,
+                    actions = {
+                        // Choose Store Button
+                        Button(
+                            onClick = {}, // needs to be defined for store selection in later iteration.
+                            modifier = modifier,
+                            enabled = true,
+                        ) {
+                            Icon(
+                                Icons.Filled.Place,
+                                contentDescription = stringResource(R.string.choose_store_button_content_description)
+                            )
+                            Text(stringResource(R.string.choose_store_button_text))
+                        }
                     }
-                }
-            )
-        }
-        // App Logo
-        Row (modifier = modifier
-            .align(Alignment.CenterHorizontally)
-            .padding(top = 100.dp)) {
-            Image(imageVector = Icons.Outlined.ShoppingCart, contentDescription = stringResource(R.string.besco_logo_content_description), modifier = modifier.size(100.dp))
-        }
-        // Welcome text // Title
-        Row (modifier = modifier
-            .align(Alignment.CenterHorizontally)
-            .padding(top = 10.dp, bottom = 10.dp)) {
-            Text(
-                text = stringResource(R.string.main_screen_welcome_text),
-                modifier = modifier,
-                fontSize = 26.sp,
-            )
-        }
-        // Search Bar
-        Row (modifier = modifier
-            .align(Alignment.CenterHorizontally)
-            .padding(top = 10.dp)) {
-            SearchBar("") { } // onQueryChange needs to be defined here in later iteration.
-        }
-        // View Shopping List Button
-        Row (modifier = modifier
-            .align(Alignment.CenterHorizontally)
-            .padding(top = 25.dp)) {
-            Button(
-                onClick = onNavigateToShoppingList,
-                modifier = modifier,
-                enabled = true,
-            ) {
-                Icon(Icons.AutoMirrored.Filled.List,
-                    stringResource(R.string.shopping_cart_image_content_description))
-                Text(stringResource(R.string.view_shopping_list_button_text))
+                )
             }
-        }
+            // App Logo
+            Row(
+                modifier = modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(top = 100.dp)
+            ) {
+                Image(
+                    imageVector = Icons.Outlined.ShoppingCart,
+                    contentDescription = stringResource(R.string.besco_logo_content_description),
+                    modifier = modifier.size(100.dp)
+                )
+            }
+            // Welcome text // Title
+            Row(
+                modifier = modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(top = 10.dp, bottom = 10.dp)
+            ) {
+                Text(
+                    text = stringResource(R.string.main_screen_welcome_text),
+                    modifier = modifier,
+                    fontSize = 26.sp,
+                )
+            }
+            // Search Bar
+            Row(
+                modifier = modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(top = 10.dp)
+            ) {
+                SearchBar(query = query.value, onQueryChange = { query.value = it })
+            }
+            // View Shopping List Button
+            Row(
+                modifier = modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(top = 25.dp)
+            ) {
+                Button(
+                    onClick = onNavigateToShoppingList,
+                    modifier = modifier,
+                    enabled = true,
+                ) {
+                    Icon(
+                        Icons.AutoMirrored.Filled.List,
+                        stringResource(R.string.shopping_cart_image_content_description)
+                    )
+                    Text(stringResource(R.string.view_shopping_list_button_text))
+                }
+            }
+            // Animation to prompt swipe down.
 
-        // Animation to prompt swipe down.
+            // Smooth up and down animation to prompt user to swipe to view list.
+            // https://developer.android.com/develop/ui/compose/animation/quick-guide#repeat-animation
+            // https://developer.android.com/develop/ui/compose/animation/quick-guide#animate-text-scale
+            val transition = rememberInfiniteTransition()
 
-        // Smooth up and down animation to prompt user to swipe to view list.
-        // https://developer.android.com/develop/ui/compose/animation/quick-guide#repeat-animation
-        // https://developer.android.com/develop/ui/compose/animation/quick-guide#animate-text-scale
-        val transition = rememberInfiniteTransition()
-
-        // Animate Y offset smoothly
-        val offsetY by transition.animateFloat(
-            initialValue = -20f,
-            targetValue = 0f,  // Maximum distance of movement
-            animationSpec = infiniteRepeatable(
-                animation = tween(durationMillis = 700, easing = FastOutSlowInEasing
-                // https://developer.android.com/develop/ui/compose/animation/customize#animationspec
-                ),
-                repeatMode = RepeatMode.Reverse // Moves up and down smoothly
+            // Animate Y offset smoothly
+            val offsetY by transition.animateFloat(
+                initialValue = -20f,
+                targetValue = 0f,  // Maximum distance of movement
+                animationSpec = infiniteRepeatable(
+                    animation = tween(
+                        durationMillis = 700, easing = FastOutSlowInEasing
+                        // https://developer.android.com/develop/ui/compose/animation/customize#animationspec
+                    ),
+                    repeatMode = RepeatMode.Reverse // Moves up and down smoothly
+                )
             )
-        )
 
-        // Swipe up ^
-        Row (modifier = modifier
-            .align(Alignment.CenterHorizontally)
-            .padding(top = 25.dp)) {
-            Icon(imageVector = Icons.Outlined.KeyboardArrowUp, contentDescription = "Down Arrow", modifier = modifier
-                .size(40.dp)
-                .offset(y = offsetY.dp))
+            // Swipe up ^
+            Row(
+                modifier = modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(top = 25.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.KeyboardArrowUp,
+                    contentDescription = "Down Arrow",
+                    modifier = modifier
+                        .size(40.dp)
+                        .offset(y = offsetY.dp)
+                )
+            }
+            Row(
+                modifier = modifier
+                    .align(Alignment.CenterHorizontally)
+                    .offset(y = offsetY.dp)
+            ) {
+                Text(stringResource(R.string.main_screen_user_swipe_prompt), fontSize = 26.sp)
+            }
+            ScrollableGrid(onItemClick = onItemClick, items = items)
         }
-        Row(modifier = modifier
-            .align(Alignment.CenterHorizontally)
-            .offset(y = offsetY.dp)) {
-            Text(stringResource(R.string.main_screen_user_swipe_prompt), fontSize = 26.sp)
-        }
-        ScrollableGrid(onItemClick = onItemClick)
-    }
 }
 
 @Composable
@@ -160,32 +193,27 @@ fun SearchBar(query:String, onQueryChange: (String) -> Unit) {
 // Returns a scrollable grid containing all items in store.
 // User can click on an item to view further information about it.
 @Composable
-fun ScrollableGrid(modifier: Modifier = Modifier, onItemClick: (ShoppingItem) -> Unit) {
-    // Load in shopping list to transform into scrollable grid.
-    val context = LocalContext.current
-    val items = remember { loadShoppingItems(context) }
-
-    // Grid operates in a 2 row by n columns basis.
-    for (item in items.indices step 2) { // step 2 to skip every second item
+fun ScrollableGrid(
+    modifier: Modifier = Modifier,
+    onItemClick: (ShoppingItem) -> Unit,
+    items: List<ShoppingItem>
+) {
+    for (item in items.indices step 2) { // Step 2 to process items in pairs
         Row(
-            modifier = Modifier.fillMaxWidth(), // Ensure the row takes up full width
-            horizontalArrangement = Arrangement.spacedBy(8.dp) // Add spacing between items
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            // First item in the row
+            // First item in the row (always exists)
             Column(
-                modifier = Modifier
-                    .weight(1f) // Each item takes up 50% of the row
-                    .height(intrinsicSize = IntrinsicSize.Min)
+                modifier = Modifier.weight(1f)
             ) {
-                // Item Card
                 Card(
                     modifier = Modifier
                         .padding(8.dp)
                         .fillMaxWidth()
-                        .clickable { onItemClick(items[item]) }, // make card clickable
+                        .clickable { onItemClick(items[item]) },
                     elevation = CardDefaults.cardElevation(4.dp)
                 ) {
-                    // Item Image
                     Row(
                         modifier = modifier
                             .align(Alignment.CenterHorizontally)
@@ -197,10 +225,8 @@ fun ScrollableGrid(modifier: Modifier = Modifier, onItemClick: (ShoppingItem) ->
                             modifier = modifier.size(50.dp)
                         )
                     }
-                    // Item Name
                     Row(
-                        modifier = modifier
-                            .align(Alignment.CenterHorizontally)
+                        modifier = modifier.align(Alignment.CenterHorizontally)
                     ) {
                         Text(
                             text = items[item].name,
@@ -212,22 +238,18 @@ fun ScrollableGrid(modifier: Modifier = Modifier, onItemClick: (ShoppingItem) ->
                 }
             }
 
-            // Second item in the row
+            // Second item in the row (only if it exists)
+            if (item + 1 < items.size) {
                 Column(
-                    modifier = Modifier
-                        .weight(1f) // Each item takes up 50% of the row
-                        .height(intrinsicSize = IntrinsicSize.Min)
+                    modifier = Modifier.weight(1f)
                 ) {
-                    // Item Card
                     Card(
                         modifier = Modifier
                             .padding(8.dp)
                             .fillMaxWidth()
-                            .height(intrinsicSize = IntrinsicSize.Min)
-                            .clickable { onItemClick(items[item + 1]) }, // Make card clickable
+                            .clickable { onItemClick(items[item + 1]) },
                         elevation = CardDefaults.cardElevation(4.dp)
                     ) {
-                        // Item Image.
                         Row(
                             modifier = modifier
                                 .align(Alignment.CenterHorizontally)
@@ -235,25 +257,27 @@ fun ScrollableGrid(modifier: Modifier = Modifier, onItemClick: (ShoppingItem) ->
                         ) {
                             Image(
                                 imageVector = Icons.Default.Star,
-                                contentDescription = "${items[item+1].name} image",
+                                contentDescription = "${items[item + 1].name} image",
                                 modifier = modifier.size(50.dp)
                             )
                         }
-                        // Item Name
                         Row(
-                            modifier = modifier
-                                .align(Alignment.CenterHorizontally)
+                            modifier = modifier.align(Alignment.CenterHorizontally)
                         ) {
                             Text(
-                                text = items[item+1].name,
+                                text = items[item + 1].name,
                                 style = MaterialTheme.typography.headlineSmall,
                                 modifier = Modifier.padding(16.dp),
                                 textAlign = TextAlign.Center
                             )
                         }
-
                     }
                 }
+            } else {
+                // If there's an odd item count, add empty space to keep layout balanced
+                // https://developer.android.com/reference/kotlin/androidx/compose/foundation/layout/package-summary#Spacer(androidx.compose.ui.Modifier)
+                Spacer(modifier = Modifier.weight(1f))
+            }
         }
     }
 }
@@ -262,7 +286,13 @@ fun ScrollableGrid(modifier: Modifier = Modifier, onItemClick: (ShoppingItem) ->
 @Preview
 @Composable
 fun PreviewMainScreen(){
-    MainScreen(onItemClick = {}, onNavigateToShoppingList = {})
+    MainScreen(
+        onNavigateToShoppingList = {},
+        onItemClick = {},
+        query = remember { mutableStateOf("") },
+        scrollState = rememberScrollState(),
+        items = loadShoppingItems(LocalContext.current)
+    )
 }
 
 // Preview for search bar
@@ -280,6 +310,7 @@ fun SearchBarPreview() {
 @Composable
 fun ScrollableGridPreview(){
     ScrollableGrid(
-        onItemClick = {}
+        onItemClick = {},
+        items = loadShoppingItems(LocalContext.current)
     )
 }
