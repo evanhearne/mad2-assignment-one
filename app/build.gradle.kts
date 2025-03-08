@@ -56,6 +56,7 @@ dependencies {
 
     // Feature module support for Fragments
     implementation(libs.androidx.navigation.dynamic.features.fragment)
+    implementation(libs.core.ktx)
 
     // Testing Navigation
     androidTestImplementation(libs.androidx.navigation.testing)
@@ -82,6 +83,8 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    androidTestImplementation(libs.androidx.core)
 }
 
 tasks.withType<Test>().configureEach {
