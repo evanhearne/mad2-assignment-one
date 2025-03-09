@@ -12,7 +12,8 @@ data class ShoppingItem(
     val name: String = "",
     val description: String = "",
     val price: Double = 0.0,
-    val availability: Boolean = false
+    val availability: Boolean = false,
+    val storeId: String = ""
 )
 
 fun loadShoppingItems(context: Context): List<ShoppingItem> {

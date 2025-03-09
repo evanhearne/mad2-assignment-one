@@ -18,3 +18,6 @@ object Login
 
 @Serializable
 object Register
+
+@Serializable
+object SelectStore

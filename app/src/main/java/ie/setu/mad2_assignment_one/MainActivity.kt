@@ -1,6 +1,7 @@
 package ie.setu.mad2_assignment_one
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -18,20 +19,24 @@ import androidx.navigation.compose.rememberNavController
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import ie.setu.mad2_assignment_one.data.ShoppingItem
+import ie.setu.mad2_assignment_one.data.Store
 import ie.setu.mad2_assignment_one.data.loadShoppingItems
 import ie.setu.mad2_assignment_one.navigation.ItemDetails
 import ie.setu.mad2_assignment_one.navigation.Login
 import ie.setu.mad2_assignment_one.navigation.Main
 import ie.setu.mad2_assignment_one.navigation.Register
+import ie.setu.mad2_assignment_one.navigation.SelectStore
 import ie.setu.mad2_assignment_one.navigation.ShoppingList
 import ie.setu.mad2_assignment_one.ui.ItemDetailsScreen
 import ie.setu.mad2_assignment_one.ui.main.MainScreen
 import ie.setu.mad2_assignment_one.ui.shopping.ShoppingListScreen
+import ie.setu.mad2_assignment_one.ui.store.StoreSelectScreen
 import ie.setu.mad2_assignment_one.ui.theme.Mad2assignmentoneTheme
 import ie.setu.mad2_assignment_one.ui.user.LoginScreen
 import ie.setu.mad2_assignment_one.ui.user.RegisterScreen
 import ie.setu.mad2_assignment_one.viewmodel.ItemViewModel
 import ie.setu.mad2_assignment_one.viewmodel.ShoppingListViewModel
+import ie.setu.mad2_assignment_one.viewmodel.StoreViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,6 +50,7 @@ class MainActivity : ComponentActivity() {
                 // ViewModels
                 val itemViewModel: ItemViewModel = viewModel()
                 val shoppingListViewModel: ShoppingListViewModel = viewModel()
+                val storeViewModel: StoreViewModel = viewModel()
 
                 // get documentId i.e. the email address
                 val documentId = Firebase.auth.currentUser?.email
@@ -65,14 +71,21 @@ class MainActivity : ComponentActivity() {
                 // Load shopping items once
                 val allItems = remember { mutableStateOf(loadShoppingItems(context)) }
 
-                // Optimize filtering using derivedStateOf to avoid unnecessary recalculations
+                // Optimized filtering using derivedStateOf to avoid unnecessary recalculations
                 val filteredItems by remember {
-                    // https://developer.android.com/develop/ui/compose/side-effects#derivedstateof
                     derivedStateOf {
-                        if (query.value != "") {
-                            allItems.value.filter { it.name.contains(query.value, ignoreCase = true) }
+                        // Apply store filter first if selectedStore is not null
+                        val filteredByStore = if (storeViewModel.selectedStore.value != null) {
+                            allItems.value.filter { it.storeId == storeViewModel.selectedStore.value?.storeId }
                         } else {
-                            allItems.value
+                            allItems.value // No store filter if none selected
+                        }
+
+                        // Apply search query filter after store filter
+                        if (query.value.isNotEmpty()) {
+                            filteredByStore.filter { it.name.contains(query.value, ignoreCase = true) }
+                        } else {
+                            filteredByStore
                         }
                     }
                 }
@@ -89,10 +102,23 @@ class MainActivity : ComponentActivity() {
                             },
                             query = query,
                             scrollState = scrollState,
-                            items = filteredItems // Use optimized filtered items
+                            items = filteredItems, // Use optimized filtered items,
+                            onNavigatetoChooseStore = {
+                                navController.navigate(route = SelectStore)
+                            }
                         )
                     }
+                    // Select Store Screen
+                    composable<SelectStore> {
+                        StoreSelectScreen(context = context, onNavigateBack = {
+                            navController.navigate(route = Main)
+                        }, onChooseStore = { store ->
+                            storeViewModel.selectStore(store as Store)
+                            Toast.makeText(context, "Chosen store is ${store.name}...", Toast.LENGTH_LONG).show()
+                            navController.navigate(route = Main)
+                        })
 
+                    }
                     // Shopping List Screen
                     composable<ShoppingList> {
                         ShoppingListScreen(

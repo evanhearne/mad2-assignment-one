@@ -7,15 +7,15 @@ import kotlinx.serialization.json.Json
 
 @Serializable
 data class Store(
-    val storeId: String,
-    val name: String,
-    val address: String,
+    val storeId: String = "",
+    val name: String = "",
+    val address: String = "",
     // store location
-    val longitude: Double,
-    val latitude: Double,
-    val openingHours: List<String>,
-    val phoneNumber: String,
-) {
+    val longitude: Double = 0.0,
+    val latitude: Double = 0.0,
+    val openingHours: List<String> = listOf(),
+    val phoneNumber: String = "",
+)
     fun loadStores(context: Context) :List<Store> {
         val rawId = R.raw.stores // JSON file for shopping items
         if (rawId == 0) return emptyList()
@@ -23,4 +23,3 @@ data class Store(
         val jsonString = context.resources.openRawResource(rawId).bufferedReader().use { it.readText() }
         return Json.decodeFromString(jsonString)
     }
-}

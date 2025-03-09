@@ -60,7 +60,8 @@ fun MainScreen(
     onItemClick: (Any?) -> Unit,
     query: MutableState<String>,
     scrollState: ScrollState,
-    items: List<ShoppingItem>
+    items: List<ShoppingItem>,
+    onNavigatetoChooseStore: () -> Unit
 ) {
         Column(modifier.verticalScroll(scrollState).padding(bottom = 50.dp)) {
             Row {
@@ -71,7 +72,7 @@ fun MainScreen(
                     actions = {
                         // Choose Store Button
                         Button(
-                            onClick = {}, // needs to be defined for store selection in later iteration.
+                            onClick = { onNavigatetoChooseStore() }, // needs to be defined for store selection in later iteration.
                             modifier = modifier,
                             enabled = true,
                         ) {
@@ -291,7 +292,8 @@ fun PreviewMainScreen(){
         onItemClick = {},
         query = remember { mutableStateOf("") },
         scrollState = rememberScrollState(),
-        items = loadShoppingItems(LocalContext.current)
+        items = loadShoppingItems(LocalContext.current),
+        onNavigatetoChooseStore = {}
     )
 }
 
