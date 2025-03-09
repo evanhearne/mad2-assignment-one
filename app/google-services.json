@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "494729265081",
+    "project_id": "evanhearne-mad2-assignment-one",
+    "storage_bucket": "evanhearne-mad2-assignment-one.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:494729265081:android:41f02bf1fb0a1b53d18068",
+        "android_client_info": {
+          "package_name": "ie.setu.mad2_assignment_one"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCYRE0X2gH0k4mW9cQgbng7P2vEuDyP-VI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -4,6 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ShoppingListItem(
-    val shoppingItem: ShoppingItem,
-    var quantity: Int
+    val shoppingItem: ShoppingItem = ShoppingItem(),
+    var quantity: Int = 0
 )

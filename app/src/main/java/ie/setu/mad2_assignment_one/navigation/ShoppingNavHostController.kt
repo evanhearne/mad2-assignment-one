@@ -12,3 +12,12 @@ object ItemDetails
 
 @Serializable
 object Main
+
+@Serializable
+object Login
+
+@Serializable
+object Register
+
+@Serializable
+object SelectStore
