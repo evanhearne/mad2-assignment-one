@@ -1,43 +1,36 @@
 package ie.setu.mad2_assignment_one.data
 
-import android.content.Context
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
-import java.io.File
+import android.util.Log
+import kotlinx.coroutines.tasks.await
 
 @Serializable
 data class ShoppingListItemList(
-    var list: List<ShoppingListItem>
+    var list: List<ShoppingListItem> = emptyList()
 ) {
     companion object {
-        private const val FILE_NAME = "shopping_list.json"
+        private const val COLLECTION_NAME = "shoppingLists" // Choose a name for your collection
 
-        // Read from internal storage
-        fun readFromStorage(context: Context): ShoppingListItemList? {
-            val file = File(context.filesDir, FILE_NAME)
-            return if (file.exists()) {
-                try {
-                    val jsonString = file.readText()
-                    Json.decodeFromString(jsonString)
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    null
-                }
+        // Read from Firestore (replace "yourDocumentId" with the actual ID)
+        suspend fun readFromFirestore(documentId: String): ShoppingListItemList? = try {
+            val documentSnapshot = Firebase.firestore.collection(COLLECTION_NAME).document(documentId).get().await()
+            if (documentSnapshot.exists()) {
+                documentSnapshot.toObject(ShoppingListItemList::class.java) // Use Firestore's built-in conversion
             } else {
                 null
             }
+        } catch (e: Exception) {
+            Log.w("Firestore", "Error reading from Firestore", e)
+            null
         }
 
-        // Save to internal storage
-        fun saveToStorage(context: Context, shoppingList: ShoppingListItemList) {
-            try {
-                val jsonString = Json.encodeToString(shoppingList)
-                val file = File(context.filesDir, FILE_NAME)
-                file.writeText(jsonString)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
+        // Save to Firestore
+        suspend fun saveToFirestore(shoppingList: ShoppingListItemList, documentId: String) = try {
+            Firebase.firestore.collection(COLLECTION_NAME).document(documentId).set(shoppingList).await()
+        } catch (e: Exception) {
+            Log.w("Firestore", "Error saving to Firestore", e)
         }
     }
 }

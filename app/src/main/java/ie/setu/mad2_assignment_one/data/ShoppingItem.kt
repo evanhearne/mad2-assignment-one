@@ -9,10 +9,10 @@ import kotlinx.serialization.json.Json
 @Serializable
 data class ShoppingItem(
     @DrawableRes val imageRes: Int = 0,  // Resource ID for images
-    val name: String,
-    val description: String,
-    val price: Double,
-    val availability: Boolean
+    val name: String = "",
+    val description: String = "",
+    val price: Double = 0.0,
+    val availability: Boolean = false
 )
 
 fun loadShoppingItems(context: Context): List<ShoppingItem> {

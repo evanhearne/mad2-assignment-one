@@ -85,6 +85,11 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     androidTestImplementation(libs.androidx.core)
+
+    implementation(libs.firebase.firestore.ktx)
+
+    implementation(libs.play.services.base)
+    implementation(libs.play.services.auth)
 }
 
 tasks.withType<Test>().configureEach {

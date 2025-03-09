@@ -1,5 +1,4 @@
 package ie.setu.mad2_assignment_one.ui.shopping
-import android.content.Context
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,20 +19,24 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import ie.setu.mad2_assignment_one.R
 import ie.setu.mad2_assignment_one.data.ShoppingItem
 import ie.setu.mad2_assignment_one.viewmodel.ShoppingListViewModel
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ShoppingListScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit, shoppingListViewModel: ShoppingListViewModel, onItemClick: (ShoppingItem) -> Unit, context: Context) {
+fun ShoppingListScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit, shoppingListViewModel: ShoppingListViewModel, onItemClick: (ShoppingItem) -> Unit) {
+    val scope = rememberCoroutineScope()
     // total variable is used to display total at the end of the shopping list
     // it is calculated on the fly.
     var total: Double
@@ -113,7 +116,15 @@ fun ShoppingListScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit
                                 .align(Alignment.CenterHorizontally)){
                                 // Decrement Item Quantity
                                 FilledIconButton(
-                                    onClick = { shoppingListViewModel.decreaseItemQuantity(item, context = context) },
+                                    onClick = {
+                                        scope.launch {
+                                            val email = Firebase.auth.currentUser?.email
+                                            if (email != null)
+                                                shoppingListViewModel.decreaseItemQuantity(item, email)
+                                            else
+                                                shoppingListViewModel.decreaseItemQuantity(item)
+                                        }
+                                    },
                                     modifier = modifier,
                                     enabled = true,
                                 ) {
@@ -121,7 +132,15 @@ fun ShoppingListScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit
                                 }
                                 // Increment Item Quantity
                                 FilledIconButton(
-                                    onClick = { shoppingListViewModel.increaseItemQuantity(item, context) },
+                                    onClick = {
+                                        scope.launch {
+                                            val email = Firebase.auth.currentUser?.email
+                                            if (email != null)
+                                                shoppingListViewModel.increaseItemQuantity(item, email)
+                                            else
+                                                shoppingListViewModel.increaseItemQuantity(item)
+                                        }
+                                    },
                                     modifier = modifier,
                                     enabled = true,
                                 ) {
@@ -144,7 +163,15 @@ fun ShoppingListScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit
                         .fillMaxWidth()
                         .padding(end = 15.dp) ,contentAlignment = Alignment.BottomEnd) {
                         Button(
-                            onClick = {shoppingListViewModel.removeAllItems(context = context)},
+                            onClick = {
+                                scope.launch {
+                                    val email = Firebase.auth.currentUser?.email
+                                    if (email != null)
+                                        shoppingListViewModel.removeAllItems(email)
+                                    else
+                                        shoppingListViewModel.removeAllItems()
+                                }
+                            },
                             modifier = modifier,
                             enabled = true,
                         ) {
@@ -163,7 +190,6 @@ fun ShoppingListScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit
 @Composable
 fun ShoppingListScreenPreview() {
     ShoppingListScreen(onNavigateBack = {}, onItemClick = {},
-        shoppingListViewModel = ShoppingListViewModel(),
-        context = LocalContext.current
+        shoppingListViewModel = ShoppingListViewModel()
     )
 }

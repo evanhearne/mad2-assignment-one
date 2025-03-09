@@ -1,6 +1,5 @@
 package ie.setu.mad2_assignment_one.ui
 
-import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,14 +22,16 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import ie.setu.mad2_assignment_one.R
 import ie.setu.mad2_assignment_one.data.ShoppingItem
 import ie.setu.mad2_assignment_one.data.ShoppingListItem
@@ -39,12 +40,14 @@ import ie.setu.mad2_assignment_one.ui.theme.itemAvailableColor
 import ie.setu.mad2_assignment_one.ui.theme.itemUnavailableBackgroundColor
 import ie.setu.mad2_assignment_one.ui.theme.itemUnavailableColor
 import ie.setu.mad2_assignment_one.viewmodel.ShoppingListViewModel
+import kotlinx.coroutines.launch
 
 // Item Details Screen
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ItemDetailsScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit, item: ShoppingItem, shoppingListViewModel: ShoppingListViewModel, context: Context) {
-    Column { 
+fun ItemDetailsScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit, item: ShoppingItem, shoppingListViewModel: ShoppingListViewModel) {
+    val scope = rememberCoroutineScope()
+    Column {
         Row {
             // Top App Bar for Item Details Screen
             TopAppBar(
@@ -110,7 +113,13 @@ fun ItemDetailsScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit,
                 if (item.availability) {
                     Button(
                         onClick = {
-                            shoppingListViewModel.addItem(ShoppingListItem(item, 1), context = context)
+                                scope.launch {
+                                    val email = Firebase.auth.currentUser?.email
+                                    if (email != null)
+                                        shoppingListViewModel.addItem(ShoppingListItem(item, 1), email)
+                                    else
+                                        shoppingListViewModel.addItem(ShoppingListItem(item, 1))
+                                }
                         }, modifier
                             .align(Alignment.CenterHorizontally)
                             .padding(bottom = 10.dp)
@@ -135,6 +144,5 @@ fun PreviewItemDetailsScreen() {
         onNavigateBack = {},
         item = ShoppingItem(0, "AA", "aaa", 0.00, true),
         shoppingListViewModel = ShoppingListViewModel(),
-        context = LocalContext.current
     )
 }

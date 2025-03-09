@@ -15,6 +15,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import ie.setu.mad2_assignment_one.data.ShoppingItem
 import ie.setu.mad2_assignment_one.data.loadShoppingItems
 import ie.setu.mad2_assignment_one.navigation.ItemDetails
@@ -44,9 +46,14 @@ class MainActivity : ComponentActivity() {
                 val itemViewModel: ItemViewModel = viewModel()
                 val shoppingListViewModel: ShoppingListViewModel = viewModel()
 
+                // get documentId i.e. the email address
+                val documentId = Firebase.auth.currentUser?.email
                 // Ensure shopping list is loaded once
                 LaunchedEffect(Unit) {
-                    shoppingListViewModel.loadShoppingList(context)
+                    if (documentId != null)
+                        shoppingListViewModel.loadShoppingList(documentId)
+                    else
+                        shoppingListViewModel.loadShoppingList()
                 }
 
                 // Search query state
@@ -71,7 +78,7 @@ class MainActivity : ComponentActivity() {
                 }
 
                 // Navigation host
-                NavHost(navController, startDestination = Main) {
+                NavHost(navController, startDestination = Login) {
                     // Main Screen
                     composable<Main> {
                         MainScreen(
@@ -94,8 +101,7 @@ class MainActivity : ComponentActivity() {
                             onItemClick = { item ->
                                 itemViewModel.selectItem(item)
                                 navController.navigate(route = ItemDetails)
-                            },
-                            context = context
+                            }
                         )
                     }
 
@@ -107,7 +113,6 @@ class MainActivity : ComponentActivity() {
                                 item = selectedItem,
                                 onNavigateBack = { navController.popBackStack() },
                                 shoppingListViewModel = shoppingListViewModel,
-                                context = context
                             )
                         }
                     }
