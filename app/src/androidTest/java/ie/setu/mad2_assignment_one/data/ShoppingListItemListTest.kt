@@ -14,6 +14,9 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
+// Note that in order to run these tests, you must set up a firestore emulator on your device.
+// Info on how to do this can be found at https://cloud.google.com/firestore/docs/emulator .
+// Run the firestore emulator on 127.0.0.1:8080 .
 
 @ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
@@ -28,9 +31,14 @@ class ShoppingListItemListTest {
         // set up firebase store emulator
         firestore = FirebaseFirestore.getInstance()
         try {
+            // 10.0.2.2 is Android's IP address equivalent to localhost on host machine when emulating.
+            // i.e. 10.0.2.2 (Android) <- 127.0.0.1 (Host PC // Machine we run instrument tests on)
             firestore.useEmulator("10.0.2.2", 8080)
-        } catch (e: IllegalStateException) {
-            throw e
+        } catch(e: IllegalStateException) {
+            // Catch is left empty on purpose...
+            // The try-catch block is here to allow the emulator to be set up just once.
+            // On multiple attempts it will throw an error, as the emulator is already set up.
+            // We can ignore the errors within this abyss... :0
         }
 
         val settings = FirebaseFirestoreSettings.Builder()
