@@ -12,10 +12,10 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ShoppingItemDao {
     @Query("SELECT * from shoppingItems where id = :id")
-    suspend fun getShoppingItem(id: Int): Flow<ShoppingItem>
+    fun getShoppingItem(id: Int): Flow<ShoppingItem>
 
     @Query("SELECT * from shoppingItems ORDER BY name ASC")
-    suspend fun getAllShoppingItems(): Flow<List<ShoppingItem>>
+    fun getAllShoppingItems(): Flow<List<ShoppingItem>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(shoppingItem: ShoppingItem)

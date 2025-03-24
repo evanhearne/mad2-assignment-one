@@ -5,12 +5,15 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.serialization.Serializable
 import android.util.Log
 import androidx.room.Entity
+import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
 import kotlinx.coroutines.tasks.await
 
 @Entity(tableName = "shoppingListItemLists")
 @Serializable
+@TypeConverters(Converters::class)
 data class ShoppingListItemList(
-    val id: Int = 0,
+    @PrimaryKey val id: Int = 0,
     var list: List<ShoppingListItem> = emptyList()
 ) {
     companion object {

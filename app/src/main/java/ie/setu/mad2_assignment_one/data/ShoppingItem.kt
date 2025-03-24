@@ -6,11 +6,14 @@ import ie.setu.mad2_assignment_one.R
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import androidx.room.Entity
+import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
 
 @Entity(tableName = "shoppingItems")
 @Serializable
+@TypeConverters(Converters::class)
 data class ShoppingItem(
-    val id: Int = 0,
+    @PrimaryKey val id: Int = 0,
     @DrawableRes val imageRes: Int = 0,  // Resource ID for images
     val name: String = "",
     val description: String = "",

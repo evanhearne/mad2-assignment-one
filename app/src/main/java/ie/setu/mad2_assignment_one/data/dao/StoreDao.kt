@@ -11,14 +11,14 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface StoreDao {
-    @Query("SELECT * from storeItems where id = :id")
-    suspend fun getStoreItem(id: Int): Flow<Store>
+    @Query("SELECT * from storeItems where StoreId = :id")
+    fun getStoreItem(id: Int): Flow<Store>
 
     @Query("SELECT * from storeItems ORDER BY name")
-    suspend fun getAllStoreItems(): Flow<List<Store>>
+    fun getAllStoreItems(): Flow<List<Store>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(storeDao: StoreDao)
+    suspend fun insert(store: Store)
 
     @Update
     suspend fun update(store: Store)
