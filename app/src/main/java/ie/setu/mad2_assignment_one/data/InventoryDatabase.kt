@@ -21,11 +21,10 @@ abstract class InventoryDatabase: RoomDatabase() {
     companion object {
         @Volatile
         private var Instance: InventoryDatabase? = null
-    }
-
-    fun getDatabase(context: Context): InventoryDatabase {
-        return Instance ?: synchronized(this) {
-            Room.databaseBuilder(context, InventoryDatabase::class.java, "local_database").fallbackToDestructiveMigration().build()
+        fun getDatabase(context: Context): InventoryDatabase {
+            return Instance ?: synchronized(this) {
+                Room.databaseBuilder(context, InventoryDatabase::class.java, "local_database").fallbackToDestructiveMigration().build()
+            }
         }
     }
 }
