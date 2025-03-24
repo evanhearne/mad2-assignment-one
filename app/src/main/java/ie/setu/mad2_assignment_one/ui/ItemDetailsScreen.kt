@@ -116,9 +116,9 @@ fun ItemDetailsScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit,
                                 scope.launch {
                                     val email = Firebase.auth.currentUser?.email
                                     if (email != null)
-                                        shoppingListViewModel.addItem(ShoppingListItem(item, 1), email)
+                                        shoppingListViewModel.addItem(ShoppingListItem(0, item, 1), email)
                                     else
-                                        shoppingListViewModel.addItem(ShoppingListItem(item, 1))
+                                        shoppingListViewModel.addItem(ShoppingListItem(0, item, 1))
                                 }
                         }, modifier
                             .align(Alignment.CenterHorizontally)
@@ -142,7 +142,7 @@ fun ItemDetailsScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit,
 fun PreviewItemDetailsScreen() {
     ItemDetailsScreen(
         onNavigateBack = {},
-        item = ShoppingItem(0, "AA", "aaa", 0.00, true),
+        item = ShoppingItem(0, 0,"AA", "aaa", 0.00, true),
         shoppingListViewModel = ShoppingListViewModel(),
     )
 }

@@ -4,10 +4,13 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.serialization.Serializable
 import android.util.Log
+import androidx.room.Entity
 import kotlinx.coroutines.tasks.await
 
+@Entity(tableName = "shoppingListItemLists")
 @Serializable
 data class ShoppingListItemList(
+    val id: Int = 0,
     var list: List<ShoppingListItem> = emptyList()
 ) {
     companion object {

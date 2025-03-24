@@ -5,6 +5,7 @@ plugins {
     kotlin("plugin.serialization") version "2.0.21"
     id("com.google.gms.google-services")
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
+    id("com.google.devtools.ksp")
 }
 
 secrets {
@@ -108,6 +109,11 @@ dependencies {
     implementation(libs.maps.compose.utils)
     // Google Maps Compose widgets library
     implementation(libs.maps.compose.widgets)
+
+    //Room
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
 }
 
 tasks.withType<Test>().configureEach {

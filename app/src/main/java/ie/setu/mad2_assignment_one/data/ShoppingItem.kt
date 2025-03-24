@@ -5,9 +5,12 @@ import androidx.annotation.DrawableRes
 import ie.setu.mad2_assignment_one.R
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import androidx.room.Entity
 
+@Entity(tableName = "shoppingItems")
 @Serializable
 data class ShoppingItem(
+    val id: Int = 0,
     @DrawableRes val imageRes: Int = 0,  // Resource ID for images
     val name: String = "",
     val description: String = "",

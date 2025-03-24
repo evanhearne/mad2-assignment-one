@@ -19,7 +19,7 @@ class ShoppingListViewModel() : ViewModel() {
     }
 
     suspend fun saveShoppingList(documentId: String = "default") {
-        ShoppingListItemList.saveToFirestore(ShoppingListItemList(_shoppingList.toList()), documentId)
+        ShoppingListItemList.saveToFirestore(ShoppingListItemList(0, _shoppingList.toList()), documentId)
     }
 
     suspend fun addItem(item: ShoppingListItem, documentId: String = "default") {

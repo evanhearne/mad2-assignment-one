@@ -1,10 +1,12 @@
 package ie.setu.mad2_assignment_one.data
 
 import android.content.Context
+import androidx.room.Entity
 import ie.setu.mad2_assignment_one.R
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
+@Entity(tableName = "storeItems")
 @Serializable
 data class Store(
     val storeId: String = "",
