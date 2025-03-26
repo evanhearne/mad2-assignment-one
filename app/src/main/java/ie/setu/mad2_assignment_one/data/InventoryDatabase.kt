@@ -23,7 +23,9 @@ abstract class InventoryDatabase: RoomDatabase() {
         private var Instance: InventoryDatabase? = null
         fun getDatabase(context: Context): InventoryDatabase {
             return Instance ?: synchronized(this) {
-                Room.databaseBuilder(context, InventoryDatabase::class.java, "local_database").fallbackToDestructiveMigration().build()
+                Room.databaseBuilder(context, InventoryDatabase::class.java, "local_database").fallbackToDestructiveMigration().build().also {
+                    Instance = it
+                }
             }
         }
     }

@@ -21,12 +21,15 @@ import com.google.firebase.auth.auth
 import ie.setu.mad2_assignment_one.data.ShoppingItem
 import ie.setu.mad2_assignment_one.data.Store
 import ie.setu.mad2_assignment_one.data.loadShoppingItems
+import ie.setu.mad2_assignment_one.data.repository.ShoppingListItemListsRepository
+import ie.setu.mad2_assignment_one.data.repository.ShoppingListItemsRepository
 import ie.setu.mad2_assignment_one.navigation.ItemDetails
 import ie.setu.mad2_assignment_one.navigation.Login
 import ie.setu.mad2_assignment_one.navigation.Main
 import ie.setu.mad2_assignment_one.navigation.Register
 import ie.setu.mad2_assignment_one.navigation.SelectStore
 import ie.setu.mad2_assignment_one.navigation.ShoppingList
+import ie.setu.mad2_assignment_one.ui.AppViewModelProvider
 import ie.setu.mad2_assignment_one.ui.ItemDetailsScreen
 import ie.setu.mad2_assignment_one.ui.main.MainScreen
 import ie.setu.mad2_assignment_one.ui.shopping.ShoppingListScreen
@@ -49,8 +52,8 @@ class MainActivity : ComponentActivity() {
 
                 // ViewModels
                 val itemViewModel: ItemViewModel = viewModel()
-                val shoppingListViewModel: ShoppingListViewModel = viewModel()
-                val storeViewModel: StoreViewModel = viewModel()
+                val shoppingListViewModel: ShoppingListViewModel = viewModel(factory = AppViewModelProvider.factory)
+                val storeViewModel: StoreViewModel = viewModel(factory = AppViewModelProvider.factory)
 
                 // get documentId i.e. the email address
                 val documentId = Firebase.auth.currentUser?.email

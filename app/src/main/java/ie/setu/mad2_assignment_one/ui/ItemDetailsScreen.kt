@@ -35,6 +35,9 @@ import com.google.firebase.auth.auth
 import ie.setu.mad2_assignment_one.R
 import ie.setu.mad2_assignment_one.data.ShoppingItem
 import ie.setu.mad2_assignment_one.data.ShoppingListItem
+import ie.setu.mad2_assignment_one.data.repository.ShoppingListItemListsRepository
+import ie.setu.mad2_assignment_one.data.repository.ShoppingListItemsRepository
+import ie.setu.mad2_assignment_one.ui.AppViewModelProvider
 import ie.setu.mad2_assignment_one.ui.theme.itemAvailableBackgroundColor
 import ie.setu.mad2_assignment_one.ui.theme.itemAvailableColor
 import ie.setu.mad2_assignment_one.ui.theme.itemUnavailableBackgroundColor
@@ -143,6 +146,8 @@ fun PreviewItemDetailsScreen() {
     ItemDetailsScreen(
         onNavigateBack = {},
         item = ShoppingItem(0, 0,"AA", "aaa", 0.00, true),
-        shoppingListViewModel = ShoppingListViewModel(),
+        shoppingListViewModel = ShoppingListViewModel(
+            shoppingListItemListsRepository = AppViewModelProvider.factory as ShoppingListItemListsRepository
+        ),
     )
 }
