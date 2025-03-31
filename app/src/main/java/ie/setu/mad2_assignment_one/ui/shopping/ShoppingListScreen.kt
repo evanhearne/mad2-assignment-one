@@ -30,6 +30,8 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import ie.setu.mad2_assignment_one.R
 import ie.setu.mad2_assignment_one.data.ShoppingItem
+import ie.setu.mad2_assignment_one.data.repository.ShoppingListItemListsRepository
+import ie.setu.mad2_assignment_one.ui.AppViewModelProvider
 import ie.setu.mad2_assignment_one.viewmodel.ShoppingListViewModel
 import kotlinx.coroutines.launch
 
@@ -190,6 +192,6 @@ fun ShoppingListScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit
 @Composable
 fun ShoppingListScreenPreview() {
     ShoppingListScreen(onNavigateBack = {}, onItemClick = {},
-        shoppingListViewModel = ShoppingListViewModel()
+        shoppingListViewModel = ShoppingListViewModel(shoppingListItemListsRepository = AppViewModelProvider.factory as ShoppingListItemListsRepository)
     )
 }

@@ -35,6 +35,9 @@ import com.google.firebase.auth.auth
 import ie.setu.mad2_assignment_one.R
 import ie.setu.mad2_assignment_one.data.ShoppingItem
 import ie.setu.mad2_assignment_one.data.ShoppingListItem
+import ie.setu.mad2_assignment_one.data.repository.ShoppingListItemListsRepository
+import ie.setu.mad2_assignment_one.data.repository.ShoppingListItemsRepository
+import ie.setu.mad2_assignment_one.ui.AppViewModelProvider
 import ie.setu.mad2_assignment_one.ui.theme.itemAvailableBackgroundColor
 import ie.setu.mad2_assignment_one.ui.theme.itemAvailableColor
 import ie.setu.mad2_assignment_one.ui.theme.itemUnavailableBackgroundColor
@@ -116,9 +119,9 @@ fun ItemDetailsScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit,
                                 scope.launch {
                                     val email = Firebase.auth.currentUser?.email
                                     if (email != null)
-                                        shoppingListViewModel.addItem(ShoppingListItem(item, 1), email)
+                                        shoppingListViewModel.addItem(ShoppingListItem(0, item, 1), email)
                                     else
-                                        shoppingListViewModel.addItem(ShoppingListItem(item, 1))
+                                        shoppingListViewModel.addItem(ShoppingListItem(0, item, 1))
                                 }
                         }, modifier
                             .align(Alignment.CenterHorizontally)
@@ -142,7 +145,9 @@ fun ItemDetailsScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit,
 fun PreviewItemDetailsScreen() {
     ItemDetailsScreen(
         onNavigateBack = {},
-        item = ShoppingItem(0, "AA", "aaa", 0.00, true),
-        shoppingListViewModel = ShoppingListViewModel(),
+        item = ShoppingItem(0, 0,"AA", "aaa", 0.00, true),
+        shoppingListViewModel = ShoppingListViewModel(
+            shoppingListItemListsRepository = AppViewModelProvider.factory as ShoppingListItemListsRepository
+        ),
     )
 }

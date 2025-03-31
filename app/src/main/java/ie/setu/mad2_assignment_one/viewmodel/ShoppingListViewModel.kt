@@ -5,21 +5,29 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import ie.setu.mad2_assignment_one.data.ShoppingListItem
 import ie.setu.mad2_assignment_one.data.ShoppingListItemList
+import ie.setu.mad2_assignment_one.data.repository.ShoppingListItemListsRepository
+import kotlinx.coroutines.flow.first
 
-class ShoppingListViewModel() : ViewModel() {
+class ShoppingListViewModel(private val shoppingListItemListsRepository: ShoppingListItemListsRepository) : ViewModel() {
 
     private val _shoppingList = mutableStateListOf<ShoppingListItem>()
     val shoppingList: SnapshotStateList<ShoppingListItem> = _shoppingList
 
     suspend fun loadShoppingList(documentId: String = "default") {
-        val savedList = ShoppingListItemList.readFromFirestore(documentId)
-        savedList?.let {
-            _shoppingList.addAll(it.list)
+        var savedList = ShoppingListItemList.readFromFirestore(documentId)
+        if (savedList != null)
+            savedList.let {
+                _shoppingList.addAll(it.list)
+            }
+        else {
+            savedList = shoppingListItemListsRepository.getShoppingListItemListStream(0).first()
+            _shoppingList.addAll(savedList.list)
         }
     }
 
     suspend fun saveShoppingList(documentId: String = "default") {
-        ShoppingListItemList.saveToFirestore(ShoppingListItemList(_shoppingList.toList()), documentId)
+        shoppingListItemListsRepository.insertShoppingListItemList(ShoppingListItemList(0, _shoppingList.toList()))
+        ShoppingListItemList.saveToFirestore(ShoppingListItemList(0, _shoppingList.toList()), documentId)
     }
 
     suspend fun addItem(item: ShoppingListItem, documentId: String = "default") {
