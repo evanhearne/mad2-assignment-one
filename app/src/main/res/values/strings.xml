@@ -31,4 +31,7 @@
     <string name="login_screen_top_app_bar_title">Login</string>
     <string name="login_screen_paragraph_1">Log in below using your email and password.</string>
     <string name="login_text">Login</string>
+    <string name="shopping_list_icon">Shopping List Icon</string>
+    <string name="account_icon">Account Icon</string>
+    <string name="about_icon">About Icon</string>
 </resources>
