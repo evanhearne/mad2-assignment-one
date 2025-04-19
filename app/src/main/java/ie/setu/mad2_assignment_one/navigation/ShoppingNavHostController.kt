@@ -21,3 +21,9 @@ object Register
 
 @Serializable
 object SelectStore
+
+@Serializable
+object Account
+
+@Serializable
+object About

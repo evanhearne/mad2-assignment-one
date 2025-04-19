@@ -13,7 +13,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -41,16 +40,10 @@ fun RegisterScreen(modifier: Modifier = Modifier, context: Context, onNavigateTo
     // Password string
     var password by remember { mutableStateOf("") }
     Column {
-        Row {
-            // TopAppBar
-            TopAppBar(
-                title = { Text(stringResource(R.string.register_screen_top_app_bar_title)) },
-            )
-        }
         // Besco Icon
         Row (modifier = modifier
             .align(Alignment.CenterHorizontally)
-            .padding(top = 80.dp)) {
+            .padding(top = 50.dp)) {
             Image(imageVector = Icons.Outlined.ShoppingCart, contentDescription = stringResource(R.string.besco_logo_content_description), modifier = modifier.size(150.dp))
         }
         // Content
@@ -122,6 +115,9 @@ fun RegisterScreen(modifier: Modifier = Modifier, context: Context, onNavigateTo
                 },
             ) {
                 Text(stringResource(R.string.register_button_text))
+            }
+            Button(onClick = { onNavigateToLoginScreen() }, modifier = Modifier.padding(horizontal = 10.dp)) {
+                Text("Go Back")
             }
         }
     }
