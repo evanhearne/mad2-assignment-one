@@ -32,6 +32,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -48,9 +49,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import ie.setu.mad2_assignment_one.R
 import ie.setu.mad2_assignment_one.data.ShoppingItem
 import ie.setu.mad2_assignment_one.data.loadShoppingItems
+import ie.setu.mad2_assignment_one.ui.BottomNavigationBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -61,30 +64,35 @@ fun MainScreen(
     query: MutableState<String>,
     scrollState: ScrollState,
     items: List<ShoppingItem>,
-    onNavigatetoChooseStore: () -> Unit
+    onNavigateChooseStore: () -> Unit,
+    bottomNavBar: @Composable () -> Unit,
 ) {
-        Column(modifier.verticalScroll(scrollState).padding(bottom = 50.dp)) {
-            Row {
-                // Top App Bar for Home Screen
-                TopAppBar(
-                    title = { Text(stringResource(R.string.main_screen_top_bar_title)) },
-                    modifier = modifier,
-                    actions = {
-                        // Choose Store Button
-                        Button(
-                            onClick = { onNavigatetoChooseStore() }, // needs to be defined for store selection in later iteration.
-                            modifier = modifier,
-                            enabled = true,
-                        ) {
-                            Icon(
-                                Icons.Filled.Place,
-                                contentDescription = stringResource(R.string.choose_store_button_content_description)
-                            )
-                            Text(stringResource(R.string.choose_store_button_text))
-                        }
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(stringResource(R.string.main_screen_top_bar_title)) },
+                modifier = modifier,
+                actions = {
+                    // Choose Store Button
+                    Button(
+                        onClick = { onNavigateChooseStore() }, // needs to be defined for store selection in later iteration.
+                        modifier = modifier,
+                        enabled = true,
+                    ) {
+                        Icon(
+                            Icons.Filled.Place,
+                            contentDescription = stringResource(R.string.choose_store_button_content_description)
+                        )
+                        Text(stringResource(R.string.choose_store_button_text))
                     }
-                )
-            }
+                }
+            )
+        },
+        bottomBar = { bottomNavBar() }
+    ) { padding ->
+        Column(modifier
+            .verticalScroll(scrollState)
+            .padding(bottom = 50.dp)) {
             // App Logo
             Row(
                 modifier = modifier
@@ -178,6 +186,8 @@ fun MainScreen(
             }
             ScrollableGrid(onItemClick = onItemClick, items = items)
         }
+
+    }
 }
 
 @Composable
@@ -293,7 +303,8 @@ fun PreviewMainScreen(){
         query = remember { mutableStateOf("") },
         scrollState = rememberScrollState(),
         items = loadShoppingItems(LocalContext.current),
-        onNavigatetoChooseStore = {}
+        onNavigateChooseStore = {},
+        bottomNavBar = { BottomNavigationBar(navController = NavController(LocalContext.current), selectedOption = 0, onOptionSelected = {}) }
     )
 }
 

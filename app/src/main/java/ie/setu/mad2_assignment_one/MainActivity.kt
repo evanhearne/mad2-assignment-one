@@ -5,10 +5,13 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
@@ -21,25 +24,27 @@ import com.google.firebase.auth.auth
 import ie.setu.mad2_assignment_one.data.ShoppingItem
 import ie.setu.mad2_assignment_one.data.Store
 import ie.setu.mad2_assignment_one.data.loadShoppingItems
-import ie.setu.mad2_assignment_one.data.repository.ShoppingListItemListsRepository
-import ie.setu.mad2_assignment_one.data.repository.ShoppingListItemsRepository
+import ie.setu.mad2_assignment_one.navigation.About
+import ie.setu.mad2_assignment_one.navigation.Account
 import ie.setu.mad2_assignment_one.navigation.ItemDetails
 import ie.setu.mad2_assignment_one.navigation.Login
 import ie.setu.mad2_assignment_one.navigation.Main
 import ie.setu.mad2_assignment_one.navigation.Register
 import ie.setu.mad2_assignment_one.navigation.SelectStore
 import ie.setu.mad2_assignment_one.navigation.ShoppingList
+import ie.setu.mad2_assignment_one.ui.AboutScreen
 import ie.setu.mad2_assignment_one.ui.AppViewModelProvider
 import ie.setu.mad2_assignment_one.ui.ItemDetailsScreen
 import ie.setu.mad2_assignment_one.ui.main.MainScreen
 import ie.setu.mad2_assignment_one.ui.shopping.ShoppingListScreen
 import ie.setu.mad2_assignment_one.ui.store.StoreSelectScreen
 import ie.setu.mad2_assignment_one.ui.theme.Mad2assignmentoneTheme
-import ie.setu.mad2_assignment_one.ui.user.LoginScreen
 import ie.setu.mad2_assignment_one.ui.user.RegisterScreen
 import ie.setu.mad2_assignment_one.viewmodel.ItemViewModel
 import ie.setu.mad2_assignment_one.viewmodel.ShoppingListViewModel
 import ie.setu.mad2_assignment_one.viewmodel.StoreViewModel
+import ie.setu.mad2_assignment_one.ui.BottomNavigationBar
+import ie.setu.mad2_assignment_one.ui.user.AccountScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,6 +79,8 @@ class MainActivity : ComponentActivity() {
                 // Load shopping items once
                 val allItems = remember { mutableStateOf(loadShoppingItems(context)) }
 
+                var selectedOption = remember { mutableIntStateOf(0) }
+
                 // Optimized filtering using derivedStateOf to avoid unnecessary recalculations
                 val filteredItems by remember {
                     derivedStateOf {
@@ -94,22 +101,27 @@ class MainActivity : ComponentActivity() {
                 }
 
                 // Navigation host
-                NavHost(navController, startDestination = Login) {
+                NavHost(navController, startDestination = Main) {
                     // Main Screen
                     composable<Main> {
-                        MainScreen(
-                            onNavigateToShoppingList = { navController.navigate(route = ShoppingList) },
-                            onItemClick = { item ->
-                                itemViewModel.selectItem(item as ShoppingItem)
-                                navController.navigate(route = ItemDetails)
-                            },
-                            query = query,
-                            scrollState = scrollState,
-                            items = filteredItems, // Use optimized filtered items,
-                            onNavigatetoChooseStore = {
-                                navController.navigate(route = SelectStore)
+                        Column {
+                            Row {
+                                MainScreen(
+                                    onNavigateToShoppingList = { navController.navigate(route = ShoppingList) },
+                                    onItemClick = { item ->
+                                        itemViewModel.selectItem(item as ShoppingItem)
+                                        navController.navigate(route = ItemDetails)
+                                    },
+                                    query = query,
+                                    scrollState = scrollState,
+                                    items = filteredItems, // Use optimized filtered items,
+                                    onNavigateChooseStore = {
+                                        navController.navigate(route = SelectStore)
+                                    },
+                                    bottomNavBar = { BottomNavigationBar(navController = navController, selectedOption = selectedOption.intValue, onOptionSelected = { selectedOption.intValue = it}) }
+                                )
                             }
-                        )
+                        }
                     }
                     // Select Store Screen
                     composable<SelectStore> {
@@ -119,7 +131,8 @@ class MainActivity : ComponentActivity() {
                             storeViewModel.selectStore(store as Store)
                             Toast.makeText(context, "Chosen store is ${store.name}...", Toast.LENGTH_LONG).show()
                             navController.navigate(route = Main)
-                        })
+                        },
+                            bottomNavBar = { BottomNavigationBar(navController = navController, selectedOption = selectedOption.intValue, onOptionSelected = { selectedOption.intValue = it}) })
 
                     }
                     // Shopping List Screen
@@ -152,11 +165,16 @@ class MainActivity : ComponentActivity() {
                     }
 
                     // Log in Screen
-                    composable<Login> {
-                        LoginScreen(
-                            context = context,
-                            onNavigateToHome = { navController.navigate(route = Main) },
-                            onNavigateToRegistration = { navController.navigate(route = Register) }
+                    composable<Account> {
+                        AccountScreen(
+                            bottomNavBar = { BottomNavigationBar(navController = navController, selectedOption = selectedOption.intValue, onOptionSelected = { selectedOption.intValue = it}) },
+                            onNavigateToHome = { navController.navigate(route = Main) }
+                        )
+                    }
+                    // About Screen
+                    composable<About> {
+                        AboutScreen(
+                            bottomNavBar = { BottomNavigationBar(navController = navController, selectedOption = selectedOption.intValue, onOptionSelected = { selectedOption.intValue = it}) },
                         )
                     }
                 }

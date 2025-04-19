@@ -1,6 +1,6 @@
 package ie.setu.mad2_assignment_one.data
 
-import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.runner.AndroidJUnit4
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.firestore.MemoryCacheSettings
@@ -46,10 +46,10 @@ class ShoppingListItemListTest {
             .build()
 
         firestore.firestoreSettings = settings
-        testList = ShoppingListItemList(
+        testList = ShoppingListItemList(0,
             listOf(
-                ShoppingListItem(ShoppingItem(0, "Milk", "Lovely milk", 2.30, true), 1),
-                ShoppingListItem(ShoppingItem(0, "Bread", "Today's bread, tomorrow!", 1.50, false), 1)
+                ShoppingListItem(0,ShoppingItem(0,0, "Milk", "Lovely milk", 2.30, true), 1),
+                ShoppingListItem(0,ShoppingItem(0,0, "Bread", "Today's bread, tomorrow!", 1.50, false), 1)
             )
         )
     }
