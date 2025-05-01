@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.tasks.await
 
 @Entity(tableName = "shoppingListItemLists")
@@ -20,23 +21,37 @@ data class ShoppingListItemList(
         private const val COLLECTION_NAME = "shoppingLists" // Choose a name for your collection
 
         // Read from Firestore (replace "yourDocumentId" with the actual ID)
-        suspend fun readFromFirestore(documentId: String): ShoppingListItemList? = try {
-            val documentSnapshot = Firebase.firestore.collection(COLLECTION_NAME).document(documentId).get().await()
-            if (documentSnapshot.exists()) {
-                documentSnapshot.toObject(ShoppingListItemList::class.java) // Use Firestore's built-in conversion
-            } else {
-                null
+        suspend fun readFromFirestore(documentId: String): ShoppingListItemList? {
+            val currentUser = FirebaseAuth.getInstance().currentUser
+            if (currentUser != null) {
+                try {
+                    val documentSnapshot =
+                        Firebase.firestore.collection(COLLECTION_NAME).document(documentId).get()
+                            .await()
+                    if (documentSnapshot.exists()) {
+                        documentSnapshot.toObject(ShoppingListItemList::class.java) // Use Firestore's built-in conversion
+                    } else {
+                        null
+                    }
+                } catch (e: Exception) {
+                    Log.w("Firestore", "Error reading from Firestore", e)
+                    null
+                }
             }
-        } catch (e: Exception) {
-            Log.w("Firestore", "Error reading from Firestore", e)
-            null
-        }
+                return ShoppingListItemList()
+    }
 
         // Save to Firestore
-        suspend fun saveToFirestore(shoppingList: ShoppingListItemList, documentId: String) = try {
-            Firebase.firestore.collection(COLLECTION_NAME).document(documentId).set(shoppingList).await()
-        } catch (e: Exception) {
-            Log.w("Firestore", "Error saving to Firestore", e)
+        suspend fun saveToFirestore(shoppingList: ShoppingListItemList, documentId: String) {
+            val currentUser = FirebaseAuth.getInstance().currentUser
+            if (currentUser != null) {
+                try {
+                    Firebase.firestore.collection(COLLECTION_NAME).document(documentId)
+                        .set(shoppingList).await()
+                } catch (e: Exception) {
+                    Log.w("Firestore", "Error saving to Firestore", e)
+                }
+            }
         }
     }
 }

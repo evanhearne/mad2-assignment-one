@@ -16,4 +16,6 @@ class OfflineShoppingListItemListsRepository(private val shoppingListItemListDao
 
     override suspend fun updateShoppingListItemList(shoppingListItemList: ShoppingListItemList) = shoppingListItemListDao.update(shoppingListItemList)
 
+    override suspend fun clear() = shoppingListItemListDao.clear()
+
 }

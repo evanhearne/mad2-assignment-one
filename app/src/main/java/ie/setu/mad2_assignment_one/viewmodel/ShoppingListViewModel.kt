@@ -26,6 +26,7 @@ class ShoppingListViewModel(private val shoppingListItemListsRepository: Shoppin
     }
 
     suspend fun saveShoppingList(documentId: String = "default") {
+        shoppingListItemListsRepository.clear()
         shoppingListItemListsRepository.insertShoppingListItemList(ShoppingListItemList(0, _shoppingList.toList()))
         ShoppingListItemList.saveToFirestore(ShoppingListItemList(0, _shoppingList.toList()), documentId)
     }

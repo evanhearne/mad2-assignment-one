@@ -9,4 +9,5 @@ interface ShoppingListItemListsRepository {
     suspend fun insertShoppingListItemList(shoppingListItemList: ShoppingListItemList)
     suspend fun deleteShoppingListItemList(shoppingListItemList: ShoppingListItemList)
     suspend fun updateShoppingListItemList(shoppingListItemList: ShoppingListItemList)
+    suspend fun clear()
 }
