@@ -10,7 +10,7 @@ import ie.setu.mad2_assignment_one.data.dao.ShoppingListItemDao
 import ie.setu.mad2_assignment_one.data.dao.ShoppingListItemListDao
 import ie.setu.mad2_assignment_one.data.dao.StoreDao
 
-@Database(entities = [ShoppingItem::class, ShoppingListItem::class, ShoppingListItemList:: class, Store:: class], version = 1, exportSchema = false)
+@Database(entities = [ShoppingItem::class, ShoppingListItem::class, ShoppingListItemList:: class, Store:: class], version = 2, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class InventoryDatabase: RoomDatabase() {
     abstract fun shoppingItemDao(): ShoppingItemDao

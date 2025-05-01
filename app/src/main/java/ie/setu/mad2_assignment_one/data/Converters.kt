@@ -5,6 +5,12 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 class Converters {
+    @TypeConverter
+    fun fromCategory(category: Category): String = category.name
+
+    @TypeConverter
+    fun toCategory(categoryName: String): Category = Category.valueOf(categoryName)
+
     // ShoppingItem
     @TypeConverter
     fun fromShoppingItem(shoppingItem: ShoppingItem): String {

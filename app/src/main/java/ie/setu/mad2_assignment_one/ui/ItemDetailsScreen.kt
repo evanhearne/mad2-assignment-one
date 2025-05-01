@@ -44,6 +44,7 @@ import ie.setu.mad2_assignment_one.ui.theme.itemUnavailableBackgroundColor
 import ie.setu.mad2_assignment_one.ui.theme.itemUnavailableColor
 import ie.setu.mad2_assignment_one.viewmodel.ShoppingListViewModel
 import kotlinx.coroutines.launch
+import ie.setu.mad2_assignment_one.data.Category
 
 // Item Details Screen
 @OptIn(ExperimentalMaterial3Api::class)
@@ -145,7 +146,7 @@ fun ItemDetailsScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit,
 fun PreviewItemDetailsScreen() {
     ItemDetailsScreen(
         onNavigateBack = {},
-        item = ShoppingItem(0, 0,"AA", "aaa", 0.00, true),
+        item = ShoppingItem(0, 0, "AA", "aaa", 0.00, Category.GROCERIES, true),
         shoppingListViewModel = ShoppingListViewModel(
             shoppingListItemListsRepository = AppViewModelProvider.factory as ShoppingListItemListsRepository
         ),
