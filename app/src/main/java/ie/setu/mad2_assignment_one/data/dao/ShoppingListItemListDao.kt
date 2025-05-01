@@ -25,4 +25,7 @@ interface ShoppingListItemListDao {
 
     @Delete
     suspend fun delete(shoppingListItemList: ShoppingListItemList)
+
+    @Query("DELETE FROM shoppingListItemLists")
+    suspend fun clear()
 }

@@ -9,6 +9,14 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 
+// enum Categories
+enum class Category {
+    GROCERIES,
+    ELECTRONICS,
+    HOMEWARE,
+    CLOTHES
+}
+
 @Entity(tableName = "shoppingItems")
 @Serializable
 @TypeConverters(Converters::class)
@@ -18,6 +26,7 @@ data class ShoppingItem(
     val name: String = "",
     val description: String = "",
     val price: Double = 0.0,
+    val category: Category = Category.GROCERIES,
     val availability: Boolean = false,
     val storeId: String = ""
 )

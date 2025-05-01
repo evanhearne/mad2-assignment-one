@@ -36,14 +36,13 @@ import ie.setu.mad2_assignment_one.R
 import ie.setu.mad2_assignment_one.data.ShoppingItem
 import ie.setu.mad2_assignment_one.data.ShoppingListItem
 import ie.setu.mad2_assignment_one.data.repository.ShoppingListItemListsRepository
-import ie.setu.mad2_assignment_one.data.repository.ShoppingListItemsRepository
-import ie.setu.mad2_assignment_one.ui.AppViewModelProvider
 import ie.setu.mad2_assignment_one.ui.theme.itemAvailableBackgroundColor
 import ie.setu.mad2_assignment_one.ui.theme.itemAvailableColor
 import ie.setu.mad2_assignment_one.ui.theme.itemUnavailableBackgroundColor
 import ie.setu.mad2_assignment_one.ui.theme.itemUnavailableColor
 import ie.setu.mad2_assignment_one.viewmodel.ShoppingListViewModel
 import kotlinx.coroutines.launch
+import ie.setu.mad2_assignment_one.data.Category
 
 // Item Details Screen
 @OptIn(ExperimentalMaterial3Api::class)
@@ -107,6 +106,8 @@ fun ItemDetailsScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit,
                         Text(stringResource(R.string.out_of_stock), color = itemUnavailableColor)
                     }
                 }
+                // Item Category
+                Text(item.category.name, textAlign = TextAlign.Center, modifier= modifier.fillMaxWidth().padding(15.dp))
                 // Item Description
                 Text(item.description, textAlign = TextAlign.Center, modifier = modifier
                     .padding(15.dp)
@@ -145,7 +146,7 @@ fun ItemDetailsScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit,
 fun PreviewItemDetailsScreen() {
     ItemDetailsScreen(
         onNavigateBack = {},
-        item = ShoppingItem(0, 0,"AA", "aaa", 0.00, true),
+        item = ShoppingItem(0, 0, "AA", "aaa", 0.00, Category.GROCERIES, true),
         shoppingListViewModel = ShoppingListViewModel(
             shoppingListItemListsRepository = AppViewModelProvider.factory as ShoppingListItemListsRepository
         ),
