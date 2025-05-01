@@ -36,8 +36,6 @@ import ie.setu.mad2_assignment_one.R
 import ie.setu.mad2_assignment_one.data.ShoppingItem
 import ie.setu.mad2_assignment_one.data.ShoppingListItem
 import ie.setu.mad2_assignment_one.data.repository.ShoppingListItemListsRepository
-import ie.setu.mad2_assignment_one.data.repository.ShoppingListItemsRepository
-import ie.setu.mad2_assignment_one.ui.AppViewModelProvider
 import ie.setu.mad2_assignment_one.ui.theme.itemAvailableBackgroundColor
 import ie.setu.mad2_assignment_one.ui.theme.itemAvailableColor
 import ie.setu.mad2_assignment_one.ui.theme.itemUnavailableBackgroundColor
@@ -108,6 +106,8 @@ fun ItemDetailsScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit,
                         Text(stringResource(R.string.out_of_stock), color = itemUnavailableColor)
                     }
                 }
+                // Item Category
+                Text(item.category.name, textAlign = TextAlign.Center, modifier= modifier.fillMaxWidth().padding(15.dp))
                 // Item Description
                 Text(item.description, textAlign = TextAlign.Center, modifier = modifier
                     .padding(15.dp)
