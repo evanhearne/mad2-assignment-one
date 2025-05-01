@@ -11,12 +11,20 @@ class ShoppingItemTest {
     @BeforeEach
     fun setUp() {
         shoppingItem = ShoppingItem(
+            id = 0,
             imageRes = 123,
             name = "Sample Item",
             description = "This is a test item.",
             price = 19.99,
-            availability = true
+            category = Category.GROCERIES,
+            availability = true,
+            storeId = "NewStore1"
         )
+    }
+
+    @Test
+    fun getStoreID() {
+        assertEquals("NewStore1", shoppingItem.storeId)
     }
 
     @Test
@@ -40,6 +48,11 @@ class ShoppingItemTest {
     }
 
     @Test
+    fun getCategory() {
+        assertEquals(Category.GROCERIES, shoppingItem.category)
+    }
+
+    @Test
     fun getAvailability() {
         assertTrue(shoppingItem.availability)
     }
@@ -56,22 +69,40 @@ class ShoppingItemTest {
 
     @Test
     fun testToString() {
-        val expectedString = "ShoppingItem(imageRes=123, name=Sample Item, description=This is a test item., price=19.99, availability=true)"
+        val expectedString = "ShoppingItem(id=0, imageRes=123, name=Sample Item, description=This is a test item., price=19.99, category=GROCERIES, availability=true, storeId=NewStore1)"
         assertEquals(expectedString, shoppingItem.toString())
     }
 
     @Test
     fun testHashCode() {
-        val identicalItem = ShoppingItem(123, "Sample Item", "This is a test item.", 19.99, true)
+        val identicalItem = ShoppingItem(
+            id = 0,
+            imageRes = 123,
+            name = "Sample Item",
+            description = "This is a test item.",
+            price = 19.99,
+            category = Category.GROCERIES,
+            availability = true,
+            storeId = "NewStore1"
+        )
         assertEquals(shoppingItem.hashCode(), identicalItem.hashCode())
     }
 
     @Test
     fun testEquals() {
-        val identicalItem = ShoppingItem(123, "Sample Item", "This is a test item.", 19.99, true)
+        val identicalItem = ShoppingItem(
+            id = 0,
+            imageRes = 123,
+            name = "Sample Item",
+            description = "This is a test item.",
+            price = 19.99,
+            category = Category.GROCERIES,
+            availability = true,
+            storeId = "NewStore1"
+        )
         assertEquals(shoppingItem, identicalItem)
 
-        val differentItem = ShoppingItem(456, "Other Item", "Different description.", 9.99, false)
+        val differentItem = ShoppingItem(imageRes = 456, name="Other Item", description = "Different description.", price=9.99, category = Category.ELECTRONICS, availability = false)
         assertNotEquals(shoppingItem, differentItem)
     }
 }

@@ -13,13 +13,16 @@ class ShoppingListItemTest {
     fun setUp() {
         // Setup common test data before each test
         shoppingItem = ShoppingItem(
+            id = 0,
             imageRes = 123,  // Example resource ID
             name = "Apple",
             description = "A fresh red apple",
+            category = Category.ELECTRONICS,
             price = 0.99,
-            availability = true
+            availability = true,
+            storeId = "NewStore1"
         )
-        shoppingListItem = ShoppingListItem(shoppingItem, 5)
+        shoppingListItem = ShoppingListItem(shoppingItem= shoppingItem, quantity = 5)
     }
 
     @Test
@@ -52,7 +55,7 @@ class ShoppingListItemTest {
     @Test
     fun testToString() {
         // Verify the string representation of the ShoppingListItem
-        val expectedString = "ShoppingListItem(shoppingItem=ShoppingItem(imageRes=123, name=Apple, description=A fresh red apple, price=0.99, availability=true), quantity=5)"
+        val expectedString = "ShoppingListItem(id=0, shoppingItem=ShoppingItem(id=0, imageRes=123, name=Apple, description=A fresh red apple, price=0.99, category=ELECTRONICS, availability=true, storeId=NewStore1), quantity=5)"
         assertEquals(expectedString, shoppingListItem.toString())
     }
 
