@@ -37,6 +37,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -50,10 +51,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import coil3.compose.AsyncImage
+import com.google.firebase.Firebase
+import com.google.firebase.storage.storage
 import ie.setu.mad2_assignment_one.R
 import ie.setu.mad2_assignment_one.data.ShoppingItem
 import ie.setu.mad2_assignment_one.data.loadShoppingItems
 import ie.setu.mad2_assignment_one.ui.BottomNavigationBar
+import kotlinx.coroutines.tasks.await
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -209,6 +214,8 @@ fun ScrollableGrid(
     onItemClick: (ShoppingItem) -> Unit,
     items: List<ShoppingItem>
 ) {
+    val storage = Firebase.storage
+
     for (item in items.indices step 2) { // Step 2 to process items in pairs
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -218,6 +225,17 @@ fun ScrollableGrid(
             Column(
                 modifier = Modifier.weight(1f)
             ) {
+                var imageUrl1 = remember { mutableStateOf<String?>(null) }
+
+                LaunchedEffect(items[item].imageRes) {
+                    try {
+                        val ref = storage.reference.child(items[item].imageRes)
+                        imageUrl1.value = ref.downloadUrl.await().toString()
+                    } catch (_: Exception) {
+                        imageUrl1.value = null
+                    }
+                }
+
                 Card(
                     modifier = Modifier
                         .padding(8.dp)
@@ -230,11 +248,19 @@ fun ScrollableGrid(
                             .align(Alignment.CenterHorizontally)
                             .padding(top = 10.dp)
                     ) {
-                        Image(
-                            imageVector = Icons.Default.Star,
-                            contentDescription = "${items[item].name} image",
-                            modifier = modifier.size(50.dp)
-                        )
+                        if (imageUrl1.value != null) {
+                            AsyncImage(
+                                model = imageUrl1.value,
+                                contentDescription = "${items[item].name} image",
+                                modifier = modifier.size(80.dp)
+                            )
+                        } else {
+                            Image(
+                                imageVector = Icons.Default.Star,
+                                contentDescription = "${items[item].name} image",
+                                modifier = modifier.size(50.dp)
+                            )
+                        }
                     }
                     Row(
                         modifier = modifier.align(Alignment.CenterHorizontally)
@@ -254,6 +280,17 @@ fun ScrollableGrid(
                 Column(
                     modifier = Modifier.weight(1f)
                 ) {
+                    var imageUrl2 = remember { mutableStateOf<String?>(null) }
+
+                    LaunchedEffect(items[item + 1].imageRes) {
+                        try {
+                            val ref = storage.reference.child(items[item + 1].imageRes)
+                            imageUrl2.value = ref.downloadUrl.await().toString()
+                        } catch (_: Exception) {
+                            imageUrl2.value = null
+                        }
+                    }
+
                     Card(
                         modifier = Modifier
                             .padding(8.dp)
@@ -266,11 +303,19 @@ fun ScrollableGrid(
                                 .align(Alignment.CenterHorizontally)
                                 .padding(top = 10.dp)
                         ) {
-                            Image(
-                                imageVector = Icons.Default.Star,
-                                contentDescription = "${items[item + 1].name} image",
-                                modifier = modifier.size(50.dp)
-                            )
+                            if (imageUrl2.value != null) {
+                                AsyncImage(
+                                    model = imageUrl2.value,
+                                    contentDescription = "${items[item + 1].name} image",
+                                    modifier = modifier.size(80.dp)
+                                )
+                            } else {
+                                Image(
+                                    imageVector = Icons.Default.Star,
+                                    contentDescription = "${items[item + 1].name} image",
+                                    modifier = modifier.size(50.dp)
+                                )
+                            }
                         }
                         Row(
                             modifier = modifier.align(Alignment.CenterHorizontally)
@@ -286,7 +331,6 @@ fun ScrollableGrid(
                 }
             } else {
                 // If there's an odd item count, add empty space to keep layout balanced
-                // https://developer.android.com/reference/kotlin/androidx/compose/foundation/layout/package-summary#Spacer(androidx.compose.ui.Modifier)
                 Spacer(modifier = Modifier.weight(1f))
             }
         }

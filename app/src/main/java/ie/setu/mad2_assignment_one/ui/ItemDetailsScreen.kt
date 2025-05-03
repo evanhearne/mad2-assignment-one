@@ -1,28 +1,18 @@
 package ie.setu.mad2_assignment_one.ui
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.runtime.*
+import coil3.compose.AsyncImage
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.storage.ktx.storage
+import kotlinx.coroutines.tasks.await
+import androidx.compose.material3.*
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -30,9 +20,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.google.firebase.Firebase
-import com.google.firebase.auth.auth
 import ie.setu.mad2_assignment_one.R
+import ie.setu.mad2_assignment_one.data.Category
 import ie.setu.mad2_assignment_one.data.ShoppingItem
 import ie.setu.mad2_assignment_one.data.ShoppingListItem
 import ie.setu.mad2_assignment_one.data.repository.ShoppingListItemListsRepository
@@ -42,41 +31,97 @@ import ie.setu.mad2_assignment_one.ui.theme.itemUnavailableBackgroundColor
 import ie.setu.mad2_assignment_one.ui.theme.itemUnavailableColor
 import ie.setu.mad2_assignment_one.viewmodel.ShoppingListViewModel
 import kotlinx.coroutines.launch
-import ie.setu.mad2_assignment_one.data.Category
 
-// Item Details Screen
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ItemDetailsScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit, item: ShoppingItem, shoppingListViewModel: ShoppingListViewModel) {
+fun ItemDetailsScreen(
+    modifier: Modifier = Modifier,
+    onNavigateBack: () -> Unit,
+    item: ShoppingItem,
+    shoppingListViewModel: ShoppingListViewModel
+) {
     val scope = rememberCoroutineScope()
-    Column {
-        Row {
-            // Top App Bar for Item Details Screen
-            TopAppBar(
-                title = { Text(stringResource(R.string.item_details_screen_top_app_bar_title)) },
-                modifier = modifier,
-                navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
-                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back_button_content_description))
+    var imageUrl by remember { mutableStateOf<String?>(null) }
+    var imageError by remember { mutableStateOf<String?>(null) }
 
-                    }
-                                 },
-            )
+    // Run once when item.imageRes changes
+    LaunchedEffect(item.imageRes) {
+        try {
+            // Ensure anonymous sign-in if not already signed in
+            if (Firebase.auth.currentUser == null) {
+                Firebase.auth.signInAnonymously().await()
+            }
+
+            // Get the download URL from Firebase Storage
+            val ref = Firebase.storage.reference.child(item.imageRes)
+            val url = ref.downloadUrl.await().toString()
+            imageUrl = url
+        } catch (e: Exception) {
+            imageError = e.localizedMessage ?: "Error loading image"
         }
-        // Item Details Card
-        Row (modifier= modifier.fillMaxHeight(), verticalAlignment = Alignment.CenterVertically) {
-            Card(modifier = modifier
-                .fillMaxWidth()
-                .padding(15.dp)) {
-                // Item Image
-                Image(imageVector = Icons.Default.Star, contentDescription = stringResource(R.string.item_image_content_description), Modifier
-                    .size(110.dp)
-                    .align(Alignment.CenterHorizontally)
-                    .padding(top = 10.dp))
-                // Item Name
-                Text(item.name, modifier = modifier.align(Alignment.CenterHorizontally), fontSize = 30.sp)
-                // Item Price
-                Text("${item.price}", modifier = modifier.align(Alignment.CenterHorizontally), fontSize = 25.sp)
+    }
+
+    Column {
+        TopAppBar(
+            title = { Text(stringResource(R.string.item_details_screen_top_app_bar_title)) },
+            modifier = modifier,
+            navigationIcon = {
+                IconButton(onClick = onNavigateBack) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = stringResource(R.string.back_button_content_description)
+                    )
+                }
+            }
+        )
+
+        Row(
+            modifier = modifier.fillMaxHeight(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Card(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(15.dp)
+            ) {
+                when {
+                    imageUrl != null -> {
+                        AsyncImage(
+                            model = imageUrl,
+                            contentDescription = "${item.name} image",
+                            modifier = Modifier
+                                .size(200.dp)
+                                .align(Alignment.CenterHorizontally)
+                                .padding(top = 10.dp)
+                        )
+                    }
+                    imageError != null -> {
+                        Text(
+                            text = imageError ?: "Error loading image",
+                            color = MaterialTheme.colorScheme.error,
+                            modifier = Modifier.align(Alignment.CenterHorizontally)
+                        )
+                    }
+                    else -> {
+                        Text(
+                            text = "Loading image...",
+                            modifier = Modifier.align(Alignment.CenterHorizontally)
+                        )
+                    }
+                }
+
+                // Item name
+                Text(
+                    item.name,
+                    modifier = modifier.align(Alignment.CenterHorizontally),
+                    fontSize = 30.sp
+                )
+                // Item price
+                Text(
+                    "${item.price}",
+                    modifier = modifier.align(Alignment.CenterHorizontally),
+                    fontSize = 25.sp
+                )
                 var color = itemAvailableBackgroundColor
                 if (!item.availability)
                     color = itemUnavailableBackgroundColor
