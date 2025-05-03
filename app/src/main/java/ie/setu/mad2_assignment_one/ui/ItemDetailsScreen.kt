@@ -146,7 +146,7 @@ fun ItemDetailsScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit,
 fun PreviewItemDetailsScreen() {
     ItemDetailsScreen(
         onNavigateBack = {},
-        item = ShoppingItem(0, 0, "AA", "aaa", 0.00, Category.GROCERIES, true),
+        item = ShoppingItem(0, "", "AA", "aaa", 0.00, Category.GROCERIES, true),
         shoppingListViewModel = ShoppingListViewModel(
             shoppingListItemListsRepository = AppViewModelProvider.factory as ShoppingListItemListsRepository
         ),

@@ -14,7 +14,7 @@ class ShoppingListItemTest {
         // Setup common test data before each test
         shoppingItem = ShoppingItem(
             id = 0,
-            imageRes = 123,  // Example resource ID
+            imageRes = "/shopping_items/test_item.png",  // Example resource ID
             name = "Apple",
             description = "A fresh red apple",
             category = Category.ELECTRONICS,
