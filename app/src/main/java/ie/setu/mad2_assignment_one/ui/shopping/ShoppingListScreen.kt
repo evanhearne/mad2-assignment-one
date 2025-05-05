@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -19,6 +18,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,19 +28,23 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil3.compose.AsyncImage
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import com.google.firebase.storage.storage
 import ie.setu.mad2_assignment_one.R
 import ie.setu.mad2_assignment_one.data.ShoppingItem
 import ie.setu.mad2_assignment_one.data.repository.ShoppingListItemListsRepository
 import ie.setu.mad2_assignment_one.ui.AppViewModelProvider
 import ie.setu.mad2_assignment_one.viewmodel.ShoppingListViewModel
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ShoppingListScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit, shoppingListViewModel: ShoppingListViewModel, onItemClick: (ShoppingItem) -> Unit) {
     val scope = rememberCoroutineScope()
+    val storage = Firebase.storage
     // total variable is used to display total at the end of the shopping list
     // it is calculated on the fly.
     var total: Double
@@ -78,6 +84,17 @@ fun ShoppingListScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit
                 // iterate through all items in the shopping list
                 for (item in shoppingList) {
                     item {
+                        var imageUrl = remember { mutableStateOf<String?>(null) }
+
+                        LaunchedEffect(item.shoppingItem.imageRes) {
+                            try {
+                                val ref = storage.reference.child(item.shoppingItem.imageRes)
+                                imageUrl.value = ref.downloadUrl.await().toString()
+                            } catch (_: Exception) {
+                                imageUrl.value = null
+                            }
+                        }
+
                         // shopping list item card
                         Card(
                             modifier = modifier
@@ -91,8 +108,7 @@ fun ShoppingListScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 // Shopping List Item Image
-                                Icon(
-                                    imageVector = Icons.Default.ShoppingCart,
+                                AsyncImage(model = imageUrl.value,
                                     contentDescription = "${item.shoppingItem.name} Image",
                                     modifier
                                         .padding(5.dp)

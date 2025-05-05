@@ -12,7 +12,7 @@ class ShoppingItemTest {
     fun setUp() {
         shoppingItem = ShoppingItem(
             id = 0,
-            imageRes = 123,
+            imageRes = "/shopping_items/test_item.png",
             name = "Sample Item",
             description = "This is a test item.",
             price = 19.99,
@@ -29,7 +29,7 @@ class ShoppingItemTest {
 
     @Test
     fun getImageRes() {
-        assertEquals(123, shoppingItem.imageRes)
+        assertEquals("/shopping_items/test_item.png", shoppingItem.imageRes)
     }
 
     @Test
@@ -60,7 +60,7 @@ class ShoppingItemTest {
     @Test
     fun testCopy() {
         val newItem = shoppingItem.copy(price = 25.99, availability = false)
-        assertEquals(123, newItem.imageRes)
+        assertEquals("/shopping_items/test_item.png", newItem.imageRes)
         assertEquals("Sample Item", newItem.name)
         assertEquals("This is a test item.", newItem.description)
         assertEquals(25.99, newItem.price, 0.01)
@@ -69,7 +69,7 @@ class ShoppingItemTest {
 
     @Test
     fun testToString() {
-        val expectedString = "ShoppingItem(id=0, imageRes=123, name=Sample Item, description=This is a test item., price=19.99, category=GROCERIES, availability=true, storeId=NewStore1)"
+        val expectedString = "ShoppingItem(id=0, imageRes=/shopping_items/test_item.png, name=Sample Item, description=This is a test item., price=19.99, category=GROCERIES, availability=true, storeId=NewStore1)"
         assertEquals(expectedString, shoppingItem.toString())
     }
 
@@ -77,7 +77,7 @@ class ShoppingItemTest {
     fun testHashCode() {
         val identicalItem = ShoppingItem(
             id = 0,
-            imageRes = 123,
+            imageRes = "/shopping_items/test_item.png",
             name = "Sample Item",
             description = "This is a test item.",
             price = 19.99,
@@ -92,7 +92,7 @@ class ShoppingItemTest {
     fun testEquals() {
         val identicalItem = ShoppingItem(
             id = 0,
-            imageRes = 123,
+            imageRes = "/shopping_items/test_item.png",
             name = "Sample Item",
             description = "This is a test item.",
             price = 19.99,
@@ -102,7 +102,7 @@ class ShoppingItemTest {
         )
         assertEquals(shoppingItem, identicalItem)
 
-        val differentItem = ShoppingItem(imageRes = 456, name="Other Item", description = "Different description.", price=9.99, category = Category.ELECTRONICS, availability = false)
+        val differentItem = ShoppingItem(imageRes = "/shopping_items/test_item.png", name="Other Item", description = "Different description.", price=9.99, category = Category.ELECTRONICS, availability = false)
         assertNotEquals(shoppingItem, differentItem)
     }
 }

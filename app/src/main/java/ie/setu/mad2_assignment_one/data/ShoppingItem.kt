@@ -22,7 +22,7 @@ enum class Category {
 @TypeConverters(Converters::class)
 data class ShoppingItem(
     @PrimaryKey val id: Int = 0,
-    @DrawableRes val imageRes: Int = 0,  // Resource ID for images
+    @DrawableRes val imageRes: String = "",  // Resource ID for images
     val name: String = "",
     val description: String = "",
     val price: Double = 0.0,

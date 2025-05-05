@@ -1,6 +1,7 @@
 [
   {
     "name": "Laptop",
+    "imageRes" : "/shopping_items/laptop.png",
     "description": "14-inch, 16GB RAM, 512GB SSD",
     "price": 1299.99,
     "category": "ELECTRONICS",
@@ -9,6 +10,7 @@
   },
   {
     "name": "Smartphone",
+    "imageRes": "/shopping_items/smartphone.png",
     "description": "6.5-inch display, 128GB storage",
     "price": 799.99,
     "category": "ELECTRONICS",
@@ -17,6 +19,7 @@
   },
   {
     "name": "Wireless Headphones",
+    "imageRes": "/shopping_items/wireless_headphones.png",
     "description": "Noise-canceling, 30-hour battery",
     "price": 199.99,
     "category": "ELECTRONICS",
@@ -25,6 +28,7 @@
   },
   {
     "name": "Coffee Maker",
+    "imageRes": "/shopping_items/coffee_maker.png",
     "description": "12-cup programmable",
     "price": 49.99,
     "category": "ELECTRONICS",
@@ -33,6 +37,7 @@
   },
   {
     "name": "Gaming Mouse",
+    "imageRes": "/shopping_items/gaming_mouse.png",
     "description": "RGB lighting, 16,000 DPI",
     "price": 59.99,
     "category": "ELECTRONICS",
@@ -41,6 +46,7 @@
   },
   {
     "name": "Keyboard",
+    "imageRes": "/shopping_items/keyboard.png",
     "description": "Mechanical, blue switches",
     "price": 89.99,
     "category": "ELECTRONICS",
@@ -49,6 +55,7 @@
   },
   {
     "name": "Backpack",
+    "imageRes": "/shopping_items/backpack.png",
     "description": "Waterproof, 25L capacity",
     "price": 39.99,
     "category": "HOMEWARE",
@@ -57,6 +64,7 @@
   },
   {
     "name": "Desk Lamp",
+    "imageRes": "/shopping_items/desk_lamp.png",
     "description": "LED, dimmable",
     "price": 29.99,
     "category": "HOMEWARE",
@@ -64,7 +72,8 @@
     "storeId": "002"
   },
   {
-    "name": "Smartwatch",
+    "name": "Smart Watch",
+    "imageRes": "/shopping_items/smart_watch.png",
     "description": "Heart rate & sleep tracking",
     "price": 149.99,
     "category": "ELECTRONICS",
@@ -73,6 +82,7 @@
   },
   {
     "name": "External Hard Drive",
+    "imageRes": "/shopping_items/external_hard_drive.png",
     "description": "2TB, USB 3.0",
     "price": 89.99,
     "category": "ELECTRONICS",
