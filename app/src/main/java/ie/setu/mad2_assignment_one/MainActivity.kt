@@ -168,7 +168,7 @@ class MainActivity : ComponentActivity() {
                     composable<Account> {
                         AccountScreen(
                             bottomNavBar = { BottomNavigationBar(navController = navController, selectedOption = selectedOption.intValue, onOptionSelected = { selectedOption.intValue = it}) },
-                            onNavigateToHome = { navController.navigate(route = Main) }
+                            onNavigateToHome = { navController.navigate(route = Main); selectedOption.intValue = 0 }
                         )
                     }
                     // About Screen
