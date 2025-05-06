@@ -7,8 +7,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -36,8 +40,16 @@ import ie.setu.mad2_assignment_one.ui.BottomNavigationBar
 fun AccountScreen(
     bottomNavBar: @Composable () -> Unit,
     onNavigateToHome: () -> Unit,
+    onNavigateToAbout: () -> Unit,
 ) {
-    val topBar = @Composable { TopAppBar(title = { Text("Account") }) }
+    val topBar = @Composable { TopAppBar(title = { Text("Account") }, actions = {
+        // About Icon and clickable topLevelRoute
+        IconButton(onClick = {
+            onNavigateToAbout()
+        }) {
+            Icon(Icons.Filled.Info, "About Icon")
+        }
+    }) }
     Scaffold(
         topBar = { topBar() },
         bottomBar = { bottomNavBar() })
@@ -81,5 +93,5 @@ fun AccountScreen(
 @Composable
 @Preview
 fun PreviewAccountScreen() {
-    AccountScreen(bottomNavBar = { BottomNavigationBar(navController = NavController(context = LocalContext.current), selectedOption = 1, onOptionSelected = {}) }, onNavigateToHome = {})
+    AccountScreen(bottomNavBar = { BottomNavigationBar(navController = NavController(context = LocalContext.current), selectedOption = 1, onOptionSelected = {}) }, onNavigateToHome = {}, onNavigateToAbout = {})
 }

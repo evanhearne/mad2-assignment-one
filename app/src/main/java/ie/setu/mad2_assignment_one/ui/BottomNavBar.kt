@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.runtime.Composable
@@ -27,9 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.compose.currentBackStackEntryAsState
 import ie.setu.mad2_assignment_one.R
-import ie.setu.mad2_assignment_one.navigation.About
 import ie.setu.mad2_assignment_one.navigation.Main
 import ie.setu.mad2_assignment_one.navigation.Account
 import ie.setu.mad2_assignment_one.navigation.TopLevelRoute
@@ -43,7 +40,6 @@ fun BottomNavigationBar(
     val topLevelRoutes = listOf(
         TopLevelRoute("Shopping", Main ,Icons.Filled.ShoppingCart),
         TopLevelRoute("Account", Account, Icons.Filled.Person),
-        TopLevelRoute("About", About, Icons.Filled.Info)
     )
     BottomAppBar {
         Row(
@@ -67,9 +63,9 @@ fun BottomNavigationBar(
                                     saveState = true
                                 }
                                 // Avoid multiple copies of the same destination when
-                                // reselecting the same item
+                                // re-selecting the same item
                                 launchSingleTop = true
-                                // Restore state when reselecting a previously selected item
+                                // Restore state when re-selecting a previously selected item
                                 restoreState = true
                             }
                         }
@@ -85,8 +81,7 @@ fun BottomNavigationBar(
                             imageVector = topLevelRoute.icon,
                             contentDescription = stringResource(id = when(index) {
                                 0 -> R.string.shopping_list_icon
-                                1 -> R.string.account_icon
-                                else -> R.string.about_icon
+                                else -> R.string.account_icon
                             })
                         )
                         Text(text = topLevelRoute.name)

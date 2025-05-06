@@ -168,13 +168,15 @@ class MainActivity : ComponentActivity() {
                     composable<Account> {
                         AccountScreen(
                             bottomNavBar = { BottomNavigationBar(navController = navController, selectedOption = selectedOption.intValue, onOptionSelected = { selectedOption.intValue = it}) },
-                            onNavigateToHome = { navController.navigate(route = Main); selectedOption.intValue = 0 }
+                            onNavigateToHome = { navController.navigate(route = Main); selectedOption.intValue = 0 },
+                            onNavigateToAbout = { navController.navigate(route = About) }
                         )
                     }
                     // About Screen
                     composable<About> {
                         AboutScreen(
                             bottomNavBar = { BottomNavigationBar(navController = navController, selectedOption = selectedOption.intValue, onOptionSelected = { selectedOption.intValue = it}) },
+                            onNavigateBack = { navController.popBackStack() }
                         )
                     }
                 }

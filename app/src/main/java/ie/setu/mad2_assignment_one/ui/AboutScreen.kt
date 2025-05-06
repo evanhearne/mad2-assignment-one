@@ -7,9 +7,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -25,10 +27,17 @@ import androidx.navigation.NavController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AboutScreen(bottomNavBar: @Composable () -> Unit){
+fun AboutScreen(bottomNavBar: @Composable () -> Unit, onNavigateBack: () -> Unit){
     Scaffold(
         topBar = { TopAppBar(
             title = { Text("About") },
+            navigationIcon = {
+                IconButton(onClick = {
+                    onNavigateBack()
+                }) {
+                    Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back Arrow")
+                }
+            }
         ) },
         bottomBar = { bottomNavBar() },
     ) { padding ->
@@ -76,6 +85,7 @@ fun AboutScreen(bottomNavBar: @Composable () -> Unit){
 @Preview
 fun PreviewAboutScreen(){
     AboutScreen(
-        bottomNavBar = { BottomNavigationBar(navController = NavController(LocalContext.current), selectedOption = 2, onOptionSelected = {}) }
+        bottomNavBar = { BottomNavigationBar(navController = NavController(LocalContext.current), selectedOption = 2, onOptionSelected = {}) },
+        onNavigateBack = {},
     )
 }
