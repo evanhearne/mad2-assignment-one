@@ -94,7 +94,7 @@ fun MainScreen(
                 actions = {
                     // Filter drop down menu
                     IconButton(onClick = { expanded = !expanded }) {
-                        Icon(Icons.Default.MoreVert, contentDescription = "More options")
+                        Icon(Icons.Default.MoreVert, contentDescription = stringResource(R.string.more_options))
                         DropdownMenu(
                             expanded = expanded,
                             onDismissRequest = { expanded = false }
@@ -126,7 +126,7 @@ fun MainScreen(
         if (showDialog) {
             AlertDialog(
                 onDismissRequest = { showDialog = false },
-                title = { Text("Choose a category to filter items by") },
+                title = { Text(stringResource(R.string.choose_category_filter_string_prompt)) },
                 text = {
                     Column {
                         options.forEach { option ->
@@ -156,12 +156,12 @@ fun MainScreen(
                             items.toMutableList()
                         }
                     }) {
-                        Text("OK")
+                        Text(stringResource(R.string.dialog_confirm))
                     }
                 },
                 dismissButton = {
                     TextButton(onClick = { showDialog = false }) {
-                        Text("Cancel")
+                        Text(stringResource(R.string.dialog_cancel))
                     }
                 }
             )

@@ -36,4 +36,8 @@
     <string name="about_icon">About Icon</string>
     <string name="default_web_client_id">691987119649-k2sq8lo8dtbd3o0cmlq8ebojgcl7ubsg.apps.googleusercontent.com</string>
     <string name="display_name">Display Name</string>
+    <string name="more_options">More options</string>
+    <string name="choose_category_filter_string_prompt">Choose a category to filter items by</string>
+    <string name="dialog_confirm">OK</string>
+    <string name="dialog_cancel">Cancel</string>
 </resources>
