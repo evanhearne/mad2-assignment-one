@@ -40,4 +40,9 @@
     <string name="choose_category_filter_string_prompt">Choose a category to filter items by</string>
     <string name="dialog_confirm">OK</string>
     <string name="dialog_cancel">Cancel</string>
+    <string name="warning_icon">Warning Icon</string>
+    <string name="alert_dialog_title">Are you sure?</string>
+    <string name="alert_dialog_msg">Your entire list will be deleted!</string>
+    <string name="modal_confirm">Confirm</string>
+    <string name="modal_dismiss">Dismiss</string>
 </resources>
