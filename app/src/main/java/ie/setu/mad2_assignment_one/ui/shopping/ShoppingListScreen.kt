@@ -74,13 +74,13 @@ fun ShoppingListScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit
         if (showModal.value) {
             AlertDialog(
                 icon = {
-                    Icon(Icons.Default.Warning, contentDescription = "Warning Icon")
+                    Icon(Icons.Default.Warning, contentDescription = stringResource(R.string.warning_icon))
                 },
                 title = {
-                    Text(text = "Are you sure?")
+                    Text(text = stringResource(R.string.alert_dialog_title))
                 },
                 text = {
-                    Text(text = "Your entire list will be deleted!")
+                    Text(text = stringResource(R.string.alert_dialog_msg))
                 },
                 onDismissRequest = {
                     showModal.value = !showModal.value
