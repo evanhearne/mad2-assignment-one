@@ -80,6 +80,7 @@ fun MainScreen(
     items: List<ShoppingItem>,
     onNavigateChooseStore: () -> Unit,
     bottomNavBar: @Composable () -> Unit,
+    chooseStoreText: String = LocalContext.current.getString(R.string.choose_store_button_text),
 ) {
     var expanded by remember { mutableStateOf(false) }
     var showDialog by remember { mutableStateOf(false) }
@@ -115,7 +116,7 @@ fun MainScreen(
                             Icons.Filled.Place,
                             contentDescription = stringResource(R.string.choose_store_button_content_description)
                         )
-                        Text(stringResource(R.string.choose_store_button_text))
+                        Text(chooseStoreText)
                     }
                 }
             )

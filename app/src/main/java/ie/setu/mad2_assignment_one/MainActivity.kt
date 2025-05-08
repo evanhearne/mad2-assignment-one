@@ -118,7 +118,8 @@ class MainActivity : ComponentActivity() {
                                     onNavigateChooseStore = {
                                         navController.navigate(route = SelectStore)
                                     },
-                                    bottomNavBar = { BottomNavigationBar(navController = navController, selectedOption = selectedOption.intValue, onOptionSelected = { selectedOption.intValue = it}) }
+                                    bottomNavBar = { BottomNavigationBar(navController = navController, selectedOption = selectedOption.intValue, onOptionSelected = { selectedOption.intValue = it}) },
+                                    chooseStoreText = storeViewModel.selectedStore.value?.name ?: context.getString(R.string.choose_store_button_text)
                                 )
                             }
                         }
