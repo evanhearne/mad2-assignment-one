@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -16,6 +18,7 @@ import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -45,6 +48,8 @@ import kotlinx.coroutines.tasks.await
 fun ShoppingListScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit, shoppingListViewModel: ShoppingListViewModel, onItemClick: (ShoppingItem) -> Unit) {
     val scope = rememberCoroutineScope()
     val storage = Firebase.storage
+    // modal boolean
+    val showModal = remember { mutableStateOf(false) }
     // total variable is used to display total at the end of the shopping list
     // it is calculated on the fly.
     var total: Double
@@ -64,6 +69,47 @@ fun ShoppingListScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit
                         )
                     }
                                  },
+            )
+        }
+        if (showModal.value) {
+            AlertDialog(
+                icon = {
+                    Icon(Icons.Default.Warning, contentDescription = "Warning Icon")
+                },
+                title = {
+                    Text(text = "Are you sure?")
+                },
+                text = {
+                    Text(text = "Your entire list will be deleted!")
+                },
+                onDismissRequest = {
+                    showModal.value = !showModal.value
+                },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            showModal.value = !showModal.value
+                            scope.launch {
+                                val email = Firebase.auth.currentUser?.email
+                                if (email != null)
+                                    shoppingListViewModel.removeAllItems(email)
+                                else
+                                    shoppingListViewModel.removeAllItems()
+                            }
+                        }
+                    ) {
+                        Text("Confirm")
+                    }
+                },
+                dismissButton = {
+                    TextButton(
+                        onClick = {
+                             showModal.value = !showModal.value
+                        }
+                    ) {
+                        Text("Dismiss")
+                    }
+                }
             )
         }
         // List generation begins here...
@@ -182,13 +228,7 @@ fun ShoppingListScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit
                         .padding(end = 15.dp) ,contentAlignment = Alignment.BottomEnd) {
                         Button(
                             onClick = {
-                                scope.launch {
-                                    val email = Firebase.auth.currentUser?.email
-                                    if (email != null)
-                                        shoppingListViewModel.removeAllItems(email)
-                                    else
-                                        shoppingListViewModel.removeAllItems()
-                                }
+                                showModal.value = !showModal.value
                             },
                             modifier = modifier,
                             enabled = true,
