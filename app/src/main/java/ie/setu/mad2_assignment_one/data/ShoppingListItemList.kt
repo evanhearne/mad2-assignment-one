@@ -15,7 +15,8 @@ import kotlinx.coroutines.tasks.await
 @TypeConverters(Converters::class)
 data class ShoppingListItemList(
     @PrimaryKey val id: Int = 0,
-    var list: List<ShoppingListItem> = emptyList()
+    var list: List<ShoppingListItem> = emptyList(),
+    var note: String = "",
 ) {
     companion object {
         private const val COLLECTION_NAME = "shoppingLists" // Choose a name for your collection
@@ -28,7 +29,7 @@ data class ShoppingListItemList(
                     val documentSnapshot =
                         Firebase.firestore.collection(COLLECTION_NAME).document(documentId).get()
                             .await()
-                    if (documentSnapshot.exists()) {
+                    return if (documentSnapshot.exists()) {
                         documentSnapshot.toObject(ShoppingListItemList::class.java) // Use Firestore's built-in conversion
                     } else {
                         null
