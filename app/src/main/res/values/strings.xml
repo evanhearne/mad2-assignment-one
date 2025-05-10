@@ -45,4 +45,9 @@
     <string name="alert_dialog_msg">Your entire list will be deleted!</string>
     <string name="modal_confirm">Confirm</string>
     <string name="modal_dismiss">Dismiss</string>
+    <string name="add_a_note_to_your_shopping_list">Add a note to your shopping list…</string>
+    <string name="confirm_edit">Confirm Edit</string>
+    <string name="edit_icon">Edit Icon</string>
+    <string name="you_have_no_notes_in_your_shopping_list">"You have no notes in your shopping list! "</string>
+    <string name="edit">Edit</string>
 </resources>

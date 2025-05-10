@@ -230,24 +230,26 @@ fun ShoppingListScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit
                             OutlinedTextField(
                                 value = note.value,
                                 onValueChange = { scope.launch { shoppingListViewModel.editNote(it) } },
-                                label = { Text("Add a note to your shopping list...") },
+                                label = { Text(stringResource(R.string.add_a_note_to_your_shopping_list)) },
                                 trailingIcon = { IconButton(onClick = { isEdit.value = !isEdit.value }) {
-                                    Icon(Icons.Default.Check, contentDescription = "Confirm Edit")
+                                    Icon(Icons.Default.Check, contentDescription = stringResource(R.string.confirm_edit))
                                 } })
                         } else {
                             Card {
                                 if (note.value == "") {
                                     // Display text
-                                    Text("You have no notes in your shopping list! ", modifier = Modifier.padding(10.dp))
+                                    Text(stringResource(R.string.you_have_no_notes_in_your_shopping_list), modifier = Modifier.padding(10.dp))
                                     // Edit IconButton
                                     IconButton(onClick = {isEdit.value = !isEdit.value}, modifier = Modifier.size(width = 75.dp, height=50.dp)) {
                                         Row(
                                             verticalAlignment = Alignment.CenterVertically,
                                             modifier = Modifier.padding(10.dp)
                                         ) {
-                                            Text("Edit")
+                                            Text(stringResource(R.string.edit))
                                             Spacer(modifier = Modifier.width(4.dp)) // Adds spacing between text and icon
-                                            Icon(Icons.Outlined.Edit, contentDescription = "Edit Icon")
+                                            Icon(Icons.Outlined.Edit, contentDescription = stringResource(
+                                                R.string.edit_icon
+                                            ))
                                         }
                                     }
                                 } else {
@@ -258,9 +260,11 @@ fun ShoppingListScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit
                                             verticalAlignment = Alignment.CenterVertically,
                                             modifier = Modifier.padding(10.dp)
                                         ) {
-                                            Text("Edit")
+                                            Text(stringResource(R.string.edit))
                                             Spacer(modifier = Modifier.width(4.dp)) // Adds spacing between text and icon
-                                            Icon(Icons.Outlined.Edit, contentDescription = "Edit Icon")
+                                            Icon(Icons.Outlined.Edit, contentDescription = stringResource(
+                                                R.string.edit_icon
+                                            ))
                                         }
                                     }
                                 }
