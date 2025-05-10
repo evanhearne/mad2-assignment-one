@@ -3,13 +3,17 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -17,6 +21,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -53,6 +58,10 @@ fun ShoppingListScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit
     // total variable is used to display total at the end of the shopping list
     // it is calculated on the fly.
     var total: Double
+    // note string
+    val note = shoppingListViewModel.note
+    // isEdit boolean
+    var isEdit = remember { mutableStateOf(false) }
     // Top App Bar
     Column {
         Row {
@@ -209,6 +218,55 @@ fun ShoppingListScreen(modifier: Modifier = Modifier, onNavigateBack: () -> Unit
                                     enabled = true,
                                 ) {
                                     Text("+", fontSize = 20.sp)
+                                }
+                            }
+                        }
+                    }
+                }
+                // Note Area
+                item {
+                    Box (modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                        if (isEdit.value) {
+                            OutlinedTextField(
+                                value = note.value,
+                                onValueChange = { scope.launch { shoppingListViewModel.editNote(it) } },
+                                label = { Text(stringResource(R.string.add_a_note_to_your_shopping_list)) },
+                                trailingIcon = { IconButton(onClick = { isEdit.value = !isEdit.value }) {
+                                    Icon(Icons.Default.Check, contentDescription = stringResource(R.string.confirm_edit))
+                                } })
+                        } else {
+                            Card {
+                                if (note.value == "") {
+                                    // Display text
+                                    Text(stringResource(R.string.you_have_no_notes_in_your_shopping_list), modifier = Modifier.padding(10.dp))
+                                    // Edit IconButton
+                                    IconButton(onClick = {isEdit.value = !isEdit.value}, modifier = Modifier.size(width = 75.dp, height=50.dp)) {
+                                        Row(
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            modifier = Modifier.padding(10.dp)
+                                        ) {
+                                            Text(stringResource(R.string.edit))
+                                            Spacer(modifier = Modifier.width(4.dp)) // Adds spacing between text and icon
+                                            Icon(Icons.Outlined.Edit, contentDescription = stringResource(
+                                                R.string.edit_icon
+                                            ))
+                                        }
+                                    }
+                                } else {
+                                    Text(note.value, modifier.padding(10.dp))
+                                    // Edit IconButton
+                                    IconButton(onClick = {isEdit.value = !isEdit.value}, modifier = Modifier.size(width = 75.dp, height=50.dp)) {
+                                        Row(
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            modifier = Modifier.padding(10.dp)
+                                        ) {
+                                            Text(stringResource(R.string.edit))
+                                            Spacer(modifier = Modifier.width(4.dp)) // Adds spacing between text and icon
+                                            Icon(Icons.Outlined.Edit, contentDescription = stringResource(
+                                                R.string.edit_icon
+                                            ))
+                                        }
+                                    }
                                 }
                             }
                         }

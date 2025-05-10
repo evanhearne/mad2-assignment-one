@@ -58,7 +58,8 @@ fun AccountScreen(
             .padding(padding)
             .fillMaxSize(), verticalArrangement = Arrangement.Center) {
             var user by remember { mutableStateOf(Firebase.auth.currentUser) }
-            if (user!!.displayName != null || user!!.email != null) {
+            val currentUser = user
+            if (currentUser != null && (currentUser.displayName != null || currentUser.email != null)) {
                 // check if user logged in
                 // User Photo
                 Row(modifier = Modifier
