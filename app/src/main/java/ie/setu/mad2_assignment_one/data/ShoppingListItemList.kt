@@ -24,7 +24,7 @@ data class ShoppingListItemList(
         // Read from Firestore (replace "yourDocumentId" with the actual ID)
         suspend fun readFromFirestore(documentId: String): ShoppingListItemList? {
             val currentUser = FirebaseAuth.getInstance().currentUser
-            if (currentUser != null) {
+            if (currentUser != null && (currentUser.displayName != null || currentUser.email != null)) {
                 try {
                     val documentSnapshot =
                         Firebase.firestore.collection(COLLECTION_NAME).document(documentId).get()
@@ -45,7 +45,7 @@ data class ShoppingListItemList(
         // Save to Firestore
         suspend fun saveToFirestore(shoppingList: ShoppingListItemList, documentId: String) {
             val currentUser = FirebaseAuth.getInstance().currentUser
-            if (currentUser != null) {
+            if (currentUser != null && (currentUser.displayName != null || currentUser.email != null)) {
                 try {
                     Firebase.firestore.collection(COLLECTION_NAME).document(documentId)
                         .set(shoppingList).await()
