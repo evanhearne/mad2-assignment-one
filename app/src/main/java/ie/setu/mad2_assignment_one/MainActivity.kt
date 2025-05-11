@@ -85,17 +85,10 @@ class MainActivity : ComponentActivity() {
                 val filteredItems by remember {
                     derivedStateOf {
                         // Apply store filter first if selectedStore is not null
-                        val filteredByStore = if (storeViewModel.selectedStore.value != null) {
+                        if (storeViewModel.selectedStore.value != null) {
                             allItems.value.filter { it.storeId == storeViewModel.selectedStore.value?.storeId }
                         } else {
                             allItems.value // No store filter if none selected
-                        }
-
-                        // Apply search query filter after store filter
-                        if (query.value.isNotEmpty()) {
-                            filteredByStore.filter { it.name.contains(query.value, ignoreCase = true) }
-                        } else {
-                            filteredByStore
                         }
                     }
                 }

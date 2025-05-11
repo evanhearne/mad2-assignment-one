@@ -47,6 +47,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -86,7 +87,16 @@ fun MainScreen(
     var showDialog by remember { mutableStateOf(false) }
     val options = listOf("All") + items.map{ it.category.name }.distinct()
     var selectedOption by remember { mutableStateOf(options[0]) }
-    var itemsToDisplay = remember { items.toMutableList() }
+    var selectedOption1 by remember { mutableStateOf(options[0]) }
+    val filteredItems by remember(query.value, selectedOption1) {
+        derivedStateOf {
+            items.filter { item ->
+                val matchesCategory = selectedOption1 == "All" || item.category.name == selectedOption1
+                val matchesQuery = query.value.isBlank() || item.name.contains(query.value, ignoreCase = true)
+                matchesCategory && matchesQuery
+            }
+        }
+    }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -151,11 +161,7 @@ fun MainScreen(
                 confirmButton = {
                     TextButton(onClick = {
                         showDialog = false
-                        itemsToDisplay = if (selectedOption != "All") {
-                            items.filter{ it.category.name == selectedOption }.toMutableList()
-                        } else {
-                            items.toMutableList()
-                        }
+                        selectedOption1 = selectedOption
                     }) {
                         Text(stringResource(R.string.dialog_confirm))
                     }
@@ -261,7 +267,7 @@ fun MainScreen(
             ) {
                 Text(stringResource(R.string.main_screen_user_swipe_prompt), fontSize = 26.sp)
             }
-            ScrollableGrid(onItemClick = onItemClick, items = itemsToDisplay)
+            ScrollableGrid(onItemClick = onItemClick, items = filteredItems)
         }
 
     }
