@@ -6,7 +6,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Button
@@ -42,6 +44,7 @@ fun AccountScreen(
     onNavigateToHome: () -> Unit,
     onNavigateToAbout: () -> Unit,
 ) {
+    val scrollState = rememberScrollState()
     val topBar = @Composable { TopAppBar(title = { Text("Account") }, actions = {
         // About Icon and clickable topLevelRoute
         IconButton(onClick = {
@@ -56,7 +59,8 @@ fun AccountScreen(
     { padding ->
         Column(modifier = Modifier
             .padding(padding)
-            .fillMaxSize(), verticalArrangement = Arrangement.Center) {
+            .fillMaxSize()
+            .verticalScroll(scrollState), verticalArrangement = Arrangement.Center) {
             var user by remember { mutableStateOf(Firebase.auth.currentUser) }
             val currentUser = user
             if (currentUser != null && (currentUser.displayName != null || currentUser.email != null)) {
