@@ -169,7 +169,7 @@ fun MainScreen(
         }
         Column(modifier
             .verticalScroll(scrollState)
-            .padding(bottom = 50.dp)) {
+            .padding(bottom = 100.dp)) {
             // App Logo
             Row(
                 modifier = modifier
