@@ -204,3 +204,13 @@ I declare that all work completed on this repository is my own.
 ## References
 
 References to tools mentioned have been made in Markdown throughout the document, and references to any new tools used or methods, can be found on my project board, or within the codebase.
+
+However, I believe the following references are critical to the app's functionality:
+
+|Name|Link|Purpose|
+|----|----|-------|
+|ROOM Tutorial|https://developer.android.com/codelabs/basic-android-kotlin-compose-persisting-data-room#0|Provided a working example of ROOM in action for local database storage.|
+|Firestore Quickstart|https://firebase.google.com/docs/firestore/quickstart|Easy to read documentation on Firestore implementation.|
+|Firebase Authentication Get Started|https://firebase.google.com/docs/auth/android/start|Similar reason to above.|
+|Firebase Storage Get Started|https://firebase.google.com/docs/storage/android/start|Similar to above - but video provided easy understanding of implementation.|
+
